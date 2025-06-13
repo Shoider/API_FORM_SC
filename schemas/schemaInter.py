@@ -2,6 +2,9 @@ from marshmallow import Schema, fields, validate
 
 class RegistroSchemaInter(Schema):
 
+    class Meta:
+        ordered = True
+
     fechasoli = fields.String(required=True)
     uaUsuario= fields.String(required=True)
     areaUsuario= fields.String(required=True)
@@ -70,6 +73,8 @@ class RegistroSchemaInter(Schema):
 
     ala= fields.String(required=False)
     piso= fields.String(required=False)
+
+    politicasaceptadas = fields.Boolean(required=True)
 
 
     
