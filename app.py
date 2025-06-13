@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_file
 from logger.logger import Logger
 from schemas.schemaVPNMayo import RegistroSchemaVPNMayo
 from schemas.schemaTel import RegistroSchemaTel
+from schemas.schemaRFC import RegistroSchemaRFC
 from routes.route import FileGeneratorRoute  
 from services.service import Service
 from models.model import BDModel
@@ -19,6 +20,7 @@ logger = Logger()
 # Schema
 form_schemaVPNMayo = RegistroSchemaVPNMayo()
 form_schemaTel = RegistroSchemaTel()
+form_schemaRFC = RegistroSchemaRFC()
 
 # Model
 db_conn = BDModel()
@@ -28,7 +30,7 @@ db_conn.connect_to_database()
 service = Service(db_conn)
 
 # Routes
-routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel)
+routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, RegistroSchemaRFC)
 
 #Blueprint
 app.register_blueprint(routes)

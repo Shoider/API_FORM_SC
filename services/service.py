@@ -36,6 +36,19 @@ class Service:
             document_type_name="Telefonia"
         )
     
+    def add_RFC(self, new_rfc):
+        """
+        Función para añadir un registro de RFC a la base de datos.
+        Utiliza el método genérico para la creación de ID e inserción.
+        """
+        # Llamamos a nuestra función genérica con los parámetros específicos para Telefonia.
+        return self._add_document_with_custom_id(
+            document_data=new_rfc,
+            data_collection_name="rfc",
+            counter_collection_name="rfcCounters",
+            document_type_name="RFC"
+        )
+    
     # Aqui van actualizaciones de memorandos
 
     def actualizar_memorando_vpn(self, nuevo_memorando, documento_id):
