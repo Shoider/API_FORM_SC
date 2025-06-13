@@ -18,8 +18,8 @@ class Service:
         # Llamamos a nuestra función genérica con los parámetros específicos para VPN Mayo.
         return self._add_document_with_custom_id(
             document_data=new_vpn,
-            data_collection_name="vpn",
-            counter_collection_name="vpnCounters",
+            data_collection_name="vpnMayo",
+            counter_collection_name="vpnMayoCounters",
             document_type_name="VPN Mayo"
         )
         
@@ -38,7 +38,7 @@ class Service:
     
     # Aqui van actualizaciones de memorandos
 
-    def actualizar_memorando_vpn(self, documento_id, nuevo_memorando):
+    def actualizar_memorando_vpn(self, nuevo_memorando, documento_id):
         """
         Busca un documento en MongoDB por su ID, actualiza el campo 'memorando'
         y retorna el documento original antes de la actualización.
@@ -48,7 +48,7 @@ class Service:
             nuevo_memorando (str): El nuevo valor para el campo 'memorando'.
         """
         try:
-            vpn_collection = self.db_conn.db['vpn']
+            vpn_collection = self.db_conn.db['vpnMayo']
             # Buscar el documento por su ID
             documento_original = vpn_collection.find_one({'_id': documento_id})
 
