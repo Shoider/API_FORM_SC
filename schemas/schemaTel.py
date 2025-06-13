@@ -4,8 +4,8 @@ class RegistroSchemaTel(Schema):
     
     activacion= fields.String(required=True)
     expiracion= fields.String(required=True)
-    nombreUsuario= fields.String(required=True, validate=validate.Length(min=1, max=256))
-    correoUsuario= fields.String(required=True, validate=validate.Length(min=1, max=256))
+    nombreUsuario = fields.String(required=True, validate=validate.Length(min=1, max=256))
+    correoUsuario = fields.Email(required=False, error_messages={"invalid": "Correo electrónico de usuario inválido"})
     direccion= fields.String(required=True)
     piso= fields.String(required=False)
     ala= fields.String(required=False)
@@ -14,10 +14,10 @@ class RegistroSchemaTel(Schema):
     nombreEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=32))
     idEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=32))
     extEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=20))
-    correoEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=32))
+    correoEmpleado= fields.Email(required=False, error_messages={"invalid": "Correo electrónico de empleado inválido"})
     puestoEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=256))
 
-    justificacion= fields.String(required=True, validate=validate.Length(min=1, max=256))
+    justificacion = fields.String(required=True, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
     puestoUsuario= fields.String(required=True, validate=validate.Length(min=1, max=256))
     nombreJefe= fields.String(required=True, validate=validate.Length(min=1, max=256))
     puestoJefe= fields.String(required=True, validate=validate.Length(min=1, max=256))
@@ -37,3 +37,5 @@ class RegistroSchemaTel(Schema):
 
     usuaExterno= fields.Boolean(required=False)
     fecha= fields.String(required=False)
+
+    politicasaceptadas = fields.Boolean(required=True)
