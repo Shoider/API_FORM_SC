@@ -181,7 +181,7 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Datos despues de limpieza: {datosProcesados}")
 
             noformato = datosProcesados.get('numeroFormato')
-            memorando = datosProcesados.get('memorando'),
+            memorando = str(datosProcesados.get('memorando'))
 
             # Llamada al servicio de actualizacion de datos
             status_code = self.service.actualizar_memorando_vpn(memorando, noformato)
@@ -192,13 +192,13 @@ class FileGeneratorRoute(Blueprint):
                 return jsonify({"message": "Datos validados correctamente", "id": noformato}), 200
             if status_code == 202:
                 self.logger.info("No se logro actualizar el memorando")
-                return jsonify({"error": "No se logro actualizar el memorando"}), 202
+                return jsonify({"error": "Datos incorrectos", "message": "No se logro actualizar el memorando"}), 401
             if status_code == 203:
                 self.logger.error("No se encontro el Numero de Formato para editar")
-                return jsonify({"error": "No se encontro el Numero de Formato para editar"}), 203
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontro el número de formato para editar"}), 402
             if status_code == 400:
                 self.logger.error("Ocurrio un error")
-                return jsonify({"error": "Ocurrio un error"}), 400
+                return jsonify({"error": "Error interno", "message": "Ocurrio un error interno"}), 400
             else:
                 self.logger.critical(f"Error interno actualizando memorando")
                 # Enviar informacion al frontend
@@ -206,7 +206,7 @@ class FileGeneratorRoute(Blueprint):
 
         except ValidationError as err:
             self.logger.error(f"Error de validación: {err.messages}")
-            return jsonify({"error": "Datos inválidos", "details": err.messages}), 422
+            return jsonify({"error": "Datos inválidos", "message": err.messages}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500

@@ -38,7 +38,7 @@ class Service:
     
     # Aqui van actualizaciones de memorandos
 
-    def actualizar_memorando_vpn(self, documento_id, nuevo_memorando):
+    def actualizar_memorando_vpn(self, nuevo_memorando, documento_id):
         """
         Busca un documento en MongoDB por su ID, actualiza el campo 'memorando'
         y retorna el documento original antes de la actualización.
