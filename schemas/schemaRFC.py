@@ -1,10 +1,12 @@
 from marshmallow import Schema, fields, validate
 
-# from schemas.schemaTablas import TablasSchemaRFC
 from schemas.schemaTablas import TablasSchemaInter
 from schemas.schemaTablas import TablasSchemaAdmin
 
 class RegistroSchemaRFC(Schema):
+
+    class Meta:
+        ordered = True
 
     # Datos Generales
     noticket = fields.String(required=True, validate=validate.Length(min=1, max=256))
@@ -17,7 +19,6 @@ class RegistroSchemaRFC(Schema):
 
     #BOOLEANO
     politicasaceptadas = fields.Boolean(required=True)
-    
 
     noms = fields.String(required=False, validate=validate.Length(min=1, max=31))
     exts = fields.String(required=False, validate=validate.Length(min=1, max=20))

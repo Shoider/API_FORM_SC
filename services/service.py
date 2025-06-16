@@ -1,4 +1,5 @@
 import datetime
+import time
 from flask import jsonify
 from pymongo import ReturnDocument
 from logger.logger import Logger
@@ -34,6 +35,32 @@ class Service:
             data_collection_name="tel",
             counter_collection_name="telCounters",
             document_type_name="Telefonia"
+        )
+    
+    def add_Inter(self, new_inter):
+        """
+        Función para añadir un registro de Internet a la base de datos.
+        Utiliza el método genérico para la creación de ID e inserción.
+        """
+        # Llamamos a nuestra función genérica con los parámetros específicos para Internet.
+        return self._add_document_with_custom_id(
+            document_data=new_inter,
+            data_collection_name="internet",
+            counter_collection_name="internetCounters",
+            document_type_name="Internet"
+        )
+    
+    def add_RFC(self, new_rfc):
+        """
+        Función para añadir un registro de RFC a la base de datos.
+        Utiliza el método genérico para la creación de ID e inserción.
+        """
+        # Llamamos a nuestra función genérica con los parámetros específicos para Telefonia.
+        return self._add_document_with_custom_id(
+            document_data=new_rfc,
+            data_collection_name="rfc",
+            counter_collection_name="rfcCounters",
+            document_type_name="RFC"
         )
     
     # Aqui van actualizaciones de memorandos
@@ -111,12 +138,17 @@ class Service:
             document_data["_id"] = custom_id
             document_data["fecha"] = now.strftime("%d-%m-%Y")  # Formato: DD-MM-YYYY
 
+            # Epoch
+            now = time.time()
+            epoch = int(now)
+            document_data["epoch"] = epoch
+
             # Insertamos el documento en la colección de datos correspondiente.
             # Usamos corchetes `[]` para acceder a la colección a través de una variable.
             self.db_conn.db[data_collection_name].insert_one(document_data)
 
-            # Si todo sale bien, devolvemos el ID y el código 201 (Creado).
-            return {"_id": custom_id}, 201
+            # Si todo sale bien, devolvemos el ID, epoch y el código 201 (Creado).
+            return {"_id": custom_id, "epoch": epoch}, 201
 
         except Exception as e:
             # Si algo falla, lo registramos en el log y devolvemos un error 500.

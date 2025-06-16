@@ -1,16 +1,18 @@
 from flask import Blueprint, request, jsonify, send_file
-from io import BytesIO
 from logger.logger import Logger
 from marshmallow import ValidationError
+import time
 
 class FileGeneratorRoute(Blueprint):
     """Class to handle the routes for file generation"""
 
-    def __init__(self, service, forms_schemaVPNMayo, forms_schemaTel):
+    def __init__(self, service, forms_schemaVPNMayo, forms_schemaTel, forms_schemaRFC, form_schemaInter):
         super().__init__("file_generator", __name__)
         self.logger = Logger()
         self.forms_schemaVPNMayo = forms_schemaVPNMayo
         self.forms_schemaTel = forms_schemaTel
+        self.forms_schemaRFC = forms_schemaRFC
+        self.form_schemaInter = form_schemaInter
         self.service = service
         self.register_routes()
 
@@ -19,6 +21,8 @@ class FileGeneratorRoute(Blueprint):
         self.route("/api2/v3/vpn", methods=["POST"])(self.vpnmayo)
         self.route("/api2/v3/vpnActualizar", methods=["POST"])(self.vpnMemorando)
         self.route("/api2/v3/telefonia", methods=["POST"])(self.telefonia)
+        self.route("/api2/v3/internet", methods=["POST"])(self.internet)
+        self.route("/api2/v3/rfc", methods=["POST"])(self.rfc)
         self.route("/api2/healthcheck", methods=["GET"])(self.healthcheck)
 
     def fetch_request_data(self):
@@ -107,11 +111,14 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             vpnmayo_registro, status_code = self.service.add_VPNMayo(datosProcesados)
+
             if status_code == 201:
                 noformato = vpnmayo_registro.get('_id')
+                epoch = vpnmayo_registro.get('epoch')
                 self.logger.info(f"Registro VPN Mayo agregado con ID: {noformato}")
+
                 # Enviar informacion al frontend
-                return jsonify({"message": "Generando PDF", "id": noformato}), 200
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
             else:
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend
@@ -185,11 +192,15 @@ class FileGeneratorRoute(Blueprint):
 
             # Llamada al servicio de actualizacion de datos
             status_code = self.service.actualizar_memorando_vpn(memorando, noformato)
+
+            # Epoch temporalmente aqui en lo que lo muevo a los servicios
+            now = time.time()
+            epoch = int(now)
             
             if status_code == 201:
                 self.logger.info(f"Registro VPN Mayo actualizado con ID: {noformato} y memorando: {memorando}")
                 # Enviar informacion al frontend
-                return jsonify({"message": "Datos validados correctamente", "id": noformato}), 200
+                return jsonify({"message": "Datos validados correctamente", "id": noformato, "epoch": epoch}), 200
             if status_code == 202:
                 self.logger.info("No se logro actualizar el memorando")
                 return jsonify({"error": "Datos incorrectos", "message": "No se logro actualizar el memorando"}), 401
@@ -244,11 +255,14 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             tel_registro, status_code = self.service.add_Tel(datosProcesados)
+
             if status_code == 201:
                 noformato = tel_registro.get('_id')
-                self.logger.info(f"Registro VPN Mayo agregado con ID: {noformato}")
+                epoch = tel_registro.get('epoch')
+                self.logger.info(f"Registro Telefonia agregado con ID: {noformato}")
+
                 # Enviar informacion al frontend
-                return jsonify({"message": "Generando PDF", "id": noformato}), 200
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
             else:
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend
@@ -269,7 +283,126 @@ class FileGeneratorRoute(Blueprint):
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
         finally:
-            # Eliminar el directorio temporal
+            self.logger.info("Función de validación finalizada")
+
+    def internet(self):
+        """
+        Esta ruta es para validar todos los datos ingresados y resppnder rapidamente en caso de error,
+        es mas ligera que la que genera el pdf.
+
+        Args:
+            data: Un diccionario.
+
+        Returns:
+            Token con id de la base de datos.
+            Errores de validacion.
+        """
+        try:
+
+            # Validacion de datos recibidos
+            data = request.get_json()
+
+            if not data:
+                return jsonify({"error": "No se enviaron datos"}), 400
+            
+            # Preparacion de datos para validar
+            datosProcesados = self.eliminar_campos_vacios(data)
+            self.logger.info(f"Datos despues de limpieza: {datosProcesados}")
+
+            # Validacion de los datos en schema
+            self.form_schemaInter.load(datosProcesados)
+            self.logger.info("Ya se validaron correctamente")
+
+            # Guardar en base de datos
+            # Llamar al servicio y retornar el id
+            inter_registro, status_code = self.service.add_Inter(datosProcesados)
+
+            if status_code == 201:
+                noformato = inter_registro.get('_id')
+                epoch = inter_registro.get('epoch')
+                self.logger.info(f"Registro Internet agregado con ID: {noformato}")
+
+                # Enviar informacion al frontend
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
+            else:
+                self.logger.error(f"Error agregando el registro a la base de datos")
+                # Enviar informacion al frontend
+                return jsonify({"error": "Error agregando el registro a la base de datos"}), 500
+            
+        except ValidationError as err:
+            # Logica para manejar solo el primer error
+            first_field_with_error = next(iter(err.messages))
+            first_error_message = err.messages[first_field_with_error][0]
+
+            messages = err.messages
+            self.logger.warning("Ocurrieron errores de validación")
+            self.logger.info(f"Errores de validación completos: {messages}")
+            
+            # Otro error de validacion
+            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+        except Exception as e:
+            self.logger.critical(f"Error validando la información: {e}")
+            return jsonify({"error": "Error validando la información"}), 500
+        finally:
+            self.logger.info("Función de validación finalizada")
+
+    def rfc(self):
+        """
+        Esta ruta es para validar todos los datos ingresados y resppnder rapidamente en caso de error,
+        es mas ligera que la que genera el pdf.
+
+        Args:
+            data: Un diccionario.
+
+        Returns:
+            Token con id de la base de datos.
+            Errores de validacion.
+        """
+        try:
+            # Validacion de datos recibidos
+            data = request.get_json()
+
+            if not data:
+                return jsonify({"error": "No se enviaron datos"}), 400
+            
+            # Preparacion de datos para validar
+            datosProcesados = self.eliminar_campos_vacios(data)
+            self.logger.info(f"Datos despues de limpieza: {datosProcesados}")
+
+            # Validacion de los datos en schema
+            self.forms_schemaRFC.load(datosProcesados)
+            self.logger.info("Ya se validaron correctamente") 
+
+            # Guardar en base de datos
+            # Llamar al servicio y retornar el id
+            rfc_registro, status_code = self.service.add_RFC(datosProcesados)
+
+            if status_code == 201:
+                noformato = rfc_registro.get('_id')
+                epoch = rfc_registro.get('epoch')
+                self.logger.info(f"Registro RFC agregado con ID: {noformato}")
+
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
+            else:
+                self.logger.error(f"Error agregando el registro a la base de datos")
+                # Enviar informacion al frontend
+                return jsonify({"error": "Error agregando el registro a la base de datos"}), 500
+            
+        except ValidationError as err:
+            # Logica para manejar solo el primer error
+            first_field_with_error = next(iter(err.messages))
+            first_error_message = err.messages[first_field_with_error][0]
+
+            messages = err.messages
+            self.logger.warning("Ocurrieron errores de validación")
+            self.logger.info(f"Errores de validación completos: {messages}")
+            
+            # Otro error de validacion
+            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+        except Exception as e:
+            self.logger.critical(f"Error validando la información: {e}")
+            return jsonify({"error": "Error validando la información"}), 500
+        finally:
             self.logger.info("Función de validación finalizada")
 
     def healthcheck(self):
