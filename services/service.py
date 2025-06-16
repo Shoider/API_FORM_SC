@@ -36,6 +36,19 @@ class Service:
             document_type_name="Telefonia"
         )
     
+    def add_Inter(self, new_inter):
+        """
+        Función para añadir un registro de Internet a la base de datos.
+        Utiliza el método genérico para la creación de ID e inserción.
+        """
+        # Llamamos a nuestra función genérica con los parámetros específicos para Internet.
+        return self._add_document_with_custom_id(
+            document_data=new_inter,
+            data_collection_name="internet",
+            counter_collection_name="internetCounters",
+            document_type_name="Internet"
+        )
+    
     def add_RFC(self, new_rfc):
         """
         Función para añadir un registro de RFC a la base de datos.
