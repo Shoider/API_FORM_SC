@@ -12,7 +12,7 @@ class RegistroSchemaTel(Schema):
     uaUsuario= fields.String(required=True)
 
     nombreEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=32))
-    idEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=32))
+    idEmpleado= fields.String(required=False, validate=validate.Length(5, error="Número de empleado inválido"))
     extEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=20))
     correoEmpleado= fields.Email(required=False, error_messages={"invalid": "Correo electrónico de empleado inválido"})
     puestoEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=256))
