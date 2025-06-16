@@ -1,33 +1,50 @@
-from marshmallow import Schema, fields, validates, ValidationError
+from marshmallow import Schema, fields, validate, validates, ValidationError
 import ipaddress
+
+# Definimos la lógica UNA SOLA VEZ en una función.
+def validar_formato_url(value):
+    """
+    Validador reutilizable que comprueba si un valor (que no sea vacío)
+    comienza con 'http'.
+    """
+    # Si el campo es opcional y viene vacío, es válido.
+    if not value: # Esto cubre None, "" y otros valores "falsy".
+        return
+
+    if not isinstance(value, str) or not value.lower().startswith("http"):
+        raise ValidationError("El campo debe ser una URL válida que comience con 'http'.")
+    
+def validar_ip_interna(value):
+    """
+    Validador reutilizable que comprueba si un valor es una IP
+    que comienza con "172.".
+    """
+    try:
+        ip = ipaddress.ip_address(value)
+        if str(ip).startswith("172."):
+            return  # Es una IP válida que cumple la condición
+    except ValueError:
+        # Si no es una IP válida, dejamos que lance el error al final.
+        pass
+
+    # Nota: Corregí el doble punto ".." al final de tu mensaje de error original.
+    raise ValidationError("Debe ser una dirección IP válida que inicie con '172.'.")
 
 class RegistroSchemaInter(Schema):
 
     class Meta:
         ordered = True
-
+        
     fechasoli = fields.String(required=True)
     uaUsuario= fields.String(required=True)
     areaUsuario= fields.String(required=True)
     nombreUsuario= fields.String(required=True)
     puestoUsuario= fields.String(required=True)
-    ipUsuario= fields.String(required=True)
-    @validates('ipUsuario')
-    def validate_url_or_ip(self, value):
-        # Intentar validar como IP
-        try:
-            ip = ipaddress.ip_address(value)
-            if str(ip).startswith("172."):
-                return  # Es una IP válida
-        except ValueError:
-            pass  # No es una IP, continuar con otras validaciones
-        # Si ninguna de las anteriores coincide, lanza un error
-        raise ValidationError("Debe ser una IP que inicie con '172..")
-    
+    ipUsuario = fields.String(required=True, validate=validar_ip_interna)
     correoUsuario=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
     direccion= fields.String(required=True)
     teleUsuario= fields.String(required=True)
-    extUsuario= fields.String(required=True)
+    extUsuario= fields.String(required=True, validate=validate.Length(4, error="Número de extensión inválido"))
     nombreJefe= fields.String(required=True)
     puestoJefe= fields.String(required=True)
 
@@ -47,145 +64,41 @@ class RegistroSchemaInter(Schema):
     otra4= fields.Boolean(required=False)
     onedrive= fields.Boolean(required=True)
 
-    urlDescarga= fields.String(required=False)
-    @validates('urlDescarga')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
+    urlDescarga = fields.String(required=False, allow_none=True, validate=validar_formato_url)
     
-    justificaDescarga= fields.String(required=False)
-    urlForos= fields.String(required=False)
-    @validates('urlForos')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaForos= fields.String(required=False)
-    urlComercio= fields.String(required=False)
-    @validates('urlComercio')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaComercio= fields.String(required=False)
-    urlRedes= fields.String(required=False)
-    @validates('urlRedes')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaRedes= fields.String(required=False)
-    urlVideos= fields.String(required=False)
-    @validates('urlVideos')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaVideos= fields.String(required=False)
-    urlWhats= fields.String(required=False)
-    @validates('urlWhats')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaWhats= fields.String(required=False)
-    urlDropbox= fields.String(required=False)
-    @validates('urlDropbox')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaDropbox= fields.String(required=False)
-    urlOnedrive= fields.String(required=False)
-    @validates('urlOnedrive')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaOnedrive= fields.String(required=False)
-    urlSkype= fields.String(required=False)
-    @validates('urlSkype')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaSkype= fields.String(required=False)
-    urlWetransfer= fields.String(required=False)
-    @validates('urlWetransfer')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaWetransfer= fields.String(required=False)
-    urlTeam= fields.String(required=False)
-    @validates('urlTeam')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaTeam= fields.String(required=False)
-    urlOtra= fields.String(required=False)
-    @validates('urlOtra')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaOtra= fields.String(required=False)
+    justificaDescarga = fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlForos = fields.String(required=False, allow_none=True, validate=validar_formato_url)
+
+    justificaForos= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlComercio= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaComercio= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlRedes= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaRedes= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlVideos= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaVideos= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlWhats= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaWhats= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlDropbox= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaDropbox= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlOnedrive= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaOnedrive= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlSkype= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaSkype= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlWetransfer= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaWetransfer= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlTeam= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaTeam= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    urlOtra= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaOtra= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
     otraC= fields.String(required=False)
-    urlOtra2= fields.String(required=False)
-    @validates('urlOtra2')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaOtra2= fields.String(required=False)
+    urlOtra2= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaOtra2= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
     otraC2= fields.String(required=False)
-    urlOtra3= fields.String(required=False)
-    @validates('urlOtra3')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaOtra3= fields.String(required=False)
+    urlOtra3= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaOtra3= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
     otraC3= fields.String(required=False)
-    urlOtra4= fields.String(required=False)
-    @validates('urlOtra4')
-    def validate_url(self, value):
-        if value is None or value == "":
-            return  # Campo opcional, permite vacío
-        if value.lower().startswith("http"):
-            return
-        raise ValidationError("Debe comenzar con 'http'")
-    justificaOtra4= fields.String(required=False)
+    urlOtra4= fields.String(required=False, allow_none=True, validate=validar_formato_url)
+    justificaOtra4= fields.String(required=False, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
     otraC4= fields.String(required=False)
 
     ala= fields.String(required=False)
