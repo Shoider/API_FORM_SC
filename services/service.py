@@ -1,4 +1,5 @@
 import datetime
+import time
 from flask import jsonify
 from pymongo import ReturnDocument
 from logger.logger import Logger
@@ -137,12 +138,17 @@ class Service:
             document_data["_id"] = custom_id
             document_data["fecha"] = now.strftime("%d-%m-%Y")  # Formato: DD-MM-YYYY
 
+            # Epoch
+            now = time.time()
+            epoch = int(now)
+            document_data["epoch"] = epoch
+
             # Insertamos el documento en la colección de datos correspondiente.
             # Usamos corchetes `[]` para acceder a la colección a través de una variable.
             self.db_conn.db[data_collection_name].insert_one(document_data)
 
-            # Si todo sale bien, devolvemos el ID y el código 201 (Creado).
-            return {"_id": custom_id}, 201
+            # Si todo sale bien, devolvemos el ID, epoch y el código 201 (Creado).
+            return {"_id": custom_id, "epoch": epoch}, 201
 
         except Exception as e:
             # Si algo falla, lo registramos en el log y devolvemos un error 500.

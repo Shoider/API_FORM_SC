@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, send_file
-from io import BytesIO
 from logger.logger import Logger
 from marshmallow import ValidationError
+import time
 
 class FileGeneratorRoute(Blueprint):
     """Class to handle the routes for file generation"""
@@ -111,11 +111,14 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             vpnmayo_registro, status_code = self.service.add_VPNMayo(datosProcesados)
+
             if status_code == 201:
                 noformato = vpnmayo_registro.get('_id')
+                epoch = vpnmayo_registro.get('epoch')
                 self.logger.info(f"Registro VPN Mayo agregado con ID: {noformato}")
+
                 # Enviar informacion al frontend
-                return jsonify({"message": "Generando PDF", "id": noformato}), 200
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
             else:
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend
@@ -189,11 +192,15 @@ class FileGeneratorRoute(Blueprint):
 
             # Llamada al servicio de actualizacion de datos
             status_code = self.service.actualizar_memorando_vpn(memorando, noformato)
+
+            # Epoch temporalmente aqui en lo que lo muevo a los servicios
+            now = time.time()
+            epoch = int(now)
             
             if status_code == 201:
                 self.logger.info(f"Registro VPN Mayo actualizado con ID: {noformato} y memorando: {memorando}")
                 # Enviar informacion al frontend
-                return jsonify({"message": "Datos validados correctamente", "id": noformato}), 200
+                return jsonify({"message": "Datos validados correctamente", "id": noformato, "epoch": epoch}), 200
             if status_code == 202:
                 self.logger.info("No se logro actualizar el memorando")
                 return jsonify({"error": "Datos incorrectos", "message": "No se logro actualizar el memorando"}), 401
@@ -248,11 +255,14 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             tel_registro, status_code = self.service.add_Tel(datosProcesados)
+
             if status_code == 201:
                 noformato = tel_registro.get('_id')
+                epoch = tel_registro.get('epoch')
                 self.logger.info(f"Registro Telefonia agregado con ID: {noformato}")
+
                 # Enviar informacion al frontend
-                return jsonify({"message": "Generando PDF", "id": noformato}), 200
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
             else:
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend
@@ -306,11 +316,14 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             inter_registro, status_code = self.service.add_Inter(datosProcesados)
+
             if status_code == 201:
                 noformato = inter_registro.get('_id')
+                epoch = inter_registro.get('epoch')
                 self.logger.info(f"Registro Internet agregado con ID: {noformato}")
+
                 # Enviar informacion al frontend
-                return jsonify({"message": "Generando PDF", "id": noformato}), 200
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
             else:
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend
@@ -363,11 +376,13 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             rfc_registro, status_code = self.service.add_RFC(datosProcesados)
+
             if status_code == 201:
                 noformato = rfc_registro.get('_id')
+                epoch = rfc_registro.get('epoch')
                 self.logger.info(f"Registro RFC agregado con ID: {noformato}")
-                # Enviar informacion al frontend
-                return jsonify({"message": "Generando PDF", "id": noformato}), 200
+
+                return jsonify({"message": "Generando PDF", "id": noformato, "epoch": epoch}), 200
             else:
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend

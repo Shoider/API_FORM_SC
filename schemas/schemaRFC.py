@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields, validate
 
-# from schemas.schemaTablas import TablasSchemaRFC
 from schemas.schemaTablas import TablasSchemaInter
 from schemas.schemaTablas import TablasSchemaAdmin
 
