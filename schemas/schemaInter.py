@@ -11,7 +11,7 @@ class RegistroSchemaInter(Schema):
     nombreUsuario= fields.String(required=True)
     puestoUsuario= fields.String(required=True)
     ipUsuario= fields.String(required=True)
-    correoUsuario= fields.String(required=True)
+    correoUsuario=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
     direccion= fields.String(required=True)
     teleUsuario= fields.String(required=True)
     extUsuario= fields.String(required=True)
@@ -59,7 +59,6 @@ class RegistroSchemaInter(Schema):
     urlOtra= fields.String(required=False)
     justificaOtra= fields.String(required=False)
     otraC= fields.String(required=False)
-
 
     urlOtra2= fields.String(required=False)
     justificaOtra2= fields.String(required=False)
