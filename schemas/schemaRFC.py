@@ -27,7 +27,7 @@ class RegistroSchemaRFC(Schema):
     nombreJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
     puestoJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
     
-    desdet = fields.String(required=True, validate=validate.Length(min=1, max=256))
+    desdet = fields.String(required=True, validate=validate.Length(min=50, max=256, error="La descripción detallada debe tener mínimo 50 caracteres"))
     desotro = fields.String(required=False, validate=validate.Length(min=0, max=256))
     
     #AQUI NO REQUIERE QUE VALIDE LAS TRES, SOLO DEBE DE TENER ALGUNA 
