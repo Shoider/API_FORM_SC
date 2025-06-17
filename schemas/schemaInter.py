@@ -35,7 +35,6 @@ class RegistroSchemaInter(Schema):
     class Meta:
         ordered = True
         
-    fechasoli = fields.String(required=True)
     uaUsuario= fields.String(required=True)
     areaUsuario= fields.String(required=True)
     nombreUsuario= fields.String(required=True)
