@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, validate, validates, ValidationError
 import ipaddress
+import re
 
 # Definimos la lógica UNA SOLA VEZ en una función.
 def validar_formato_url(value):
@@ -29,6 +30,10 @@ def validar_ip_interna(value):
 
     # Nota: Corregí el doble punto ".." al final de tu mensaje de error original.
     raise ValidationError("Debe ser una dirección IP válida que inicie con '172.'.")
+def validar_telefono_usuario(value):
+    patron = r'^[0-9\-\s()]+$'
+    if not re.fullmatch(patron, value):
+        raise ValidationError("El teléfono solo puede contener números, guiones, espacios o paréntesis.")
 
 class RegistroSchemaInter(Schema):
 
@@ -42,7 +47,7 @@ class RegistroSchemaInter(Schema):
     ipUsuario = fields.String(required=True, validate=validar_ip_interna)
     correoUsuario=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
     direccion= fields.String(required=True)
-    teleUsuario= fields.Number(required=True, error_messages={"invalid": "Teléfono de usuario inválido"})
+    teleUsuario= fields.String(required=True, validate=validar_telefono_usuario)
     extUsuario= fields.String(required=True, validate=validate.Length(4, error="Número de extensión inválido"))
     nombreJefe= fields.String(required=True)
     puestoJefe= fields.String(required=True)
