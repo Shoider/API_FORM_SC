@@ -28,11 +28,9 @@ class RegistroSchemaTel(Schema):
     movimiento= fields.String(required=True, validate=validate.OneOf(["ALTA", "BAJA", "CAMBIO"]))
 
     mundo= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
-    local= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
-    cLocal= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
     nacional= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
-    cNacional= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
-    eua= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
+    celular= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
+
     tipoUsuario= fields.String(required=True)
 
     usuaExterno= fields.Boolean(required=False)
