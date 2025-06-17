@@ -166,7 +166,7 @@ class FileGeneratorRoute(Blueprint):
                             return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP'"}), 422
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
@@ -278,7 +278,7 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Errores de validación completos: {messages}")
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
@@ -339,7 +339,7 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Errores de validación completos: {messages}")
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
@@ -398,7 +398,7 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Errores de validación completos: {messages}")
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
