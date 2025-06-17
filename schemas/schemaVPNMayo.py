@@ -19,7 +19,13 @@ class RegistroSchemaVPNMayo(Schema):
     nombreInterno=fields.String(required=False)
     puestoInterno= fields.String(required=False)
     #correoInterno=fields.String(required=False)
-    correoInterno=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
+    correoInterno=fields.String(required=False)
+    @validates('correoInterno')
+    def validate_correo_interno(self, value):
+        if value is None or value == "":
+            return  # Campo opcional, permite vacío
+        if not isinstance(value, str) or not value.lower().endswith("@conagua.gob.mx"):
+            raise ValidationError("Debe ser un correo institucional que termine en @conagua.gob.mx.")
     telefonoInterno=fields.String(required=False, validate=validate.Length(min=8, max=20, error="Teléfono de usuario inválido"))
     nombreExterno=fields.String(required=False)
     correoExterno=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})

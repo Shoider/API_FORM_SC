@@ -15,13 +15,13 @@ class RegistroSchemaRFC(Schema):
     _id = fields.String(required=False)
 
     nomei = fields.String(required=False)
-    extei = fields.String(required=False)
+    extei = fields.String(required=False, validate=validate.Length(min=4, max=20, error="Teléfono/extensión de enlace informático inválido"))
 
     #BOOLEANO
     politicasaceptadas = fields.Boolean(required=True)
 
     noms = fields.String(required=False, validate=validate.Length(min=1, max=31))
-    exts = fields.String(required=False, validate=validate.Length(min=1, max=20))
+    exts = fields.String(required=False, validate=validate.Length(min=4, max=20, error="Teléfono/extensión de solicitante inválido"))
     puestos = fields.String(required=False, validate=validate.Length(min=1, max=256))
     areas = fields.String(required=False, validate=validate.Length(min=1, max=256))
     nombreJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
