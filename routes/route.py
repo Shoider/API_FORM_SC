@@ -166,7 +166,7 @@ class FileGeneratorRoute(Blueprint):
                             return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP'"}), 422
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
@@ -278,7 +278,7 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Errores de validación completos: {messages}")
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
@@ -339,7 +339,7 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Errores de validación completos: {messages}")
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
@@ -398,12 +398,59 @@ class FileGeneratorRoute(Blueprint):
             self.logger.info(f"Errores de validación completos: {messages}")
             
             # Otro error de validacion
-            return jsonify({"error": "Datos invalidos", "message": first_error_message}), 422
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500
         finally:
             self.logger.info("Función de validación finalizada")
+
+    # No sirve, solo es para conservar lo que teniamos antes
+    def rfcFuncionORol(self):
+        try: 
+            # Recibimos datos
+            data = request.get_json()
+
+            # Validamos que existan datos
+            if not data:
+                return jsonify({"error": "Invalid data"}), 400
+            
+            # Validacion
+            validated_data = self.actualizarFuncionRol.load(data)
+
+            funcionrol = validated_data.get('funcionrol')
+            nFormato = validated_data.get('numeroFormato')
+
+            nRegistro = int(validated_data.get('numeroRegistro'))
+
+            movimiento = validated_data.get('movimientoID')
+
+            # Llamada al servicio de actualizacion de datos
+            Datos, status_code = self.service.actualizar_funcionrol_rfc(nFormato, funcionrol, nRegistro, movimiento)
+
+            if status_code == 201:
+                self.logger.info("Informacion actualizada con exito en la base de datos")
+                # Enviar archivo
+                return self.rfc(Datos)
+            if status_code == 202:
+                self.logger.info("No se logro actualizar el FRO")
+                return jsonify(Datos), status_code
+            if status_code == 203:
+                self.logger.error("No se encontro formato con  el ID especifico")
+                return jsonify({"error": "No se encontro el ID de registro"}), status_code
+            if status_code == 400:
+                self.logger.error("Ocurrio un error")
+                return jsonify({"error": "Error nuevo"}), status_code
+            else:
+                self.logger.error("Ocurrio otro error aqui")
+                return jsonify({"error": "Error diferente"}), status_code
+
+        except ValidationError as err:
+            self.logger.error(f"Error de validación: {err.messages}")
+            return jsonify({"error": "Datos inválidos", "details": err.messages}), 400
+        except Exception as e:
+            self.logger.error(f"Error generando PDF: {e}")
+            return jsonify({"error": "Error generando PDF"}), 500
 
     def healthcheck(self):
         """Function to check the health of the services API inside the docker container"""

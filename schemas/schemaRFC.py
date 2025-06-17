@@ -14,20 +14,20 @@ class RegistroSchemaRFC(Schema):
     descbreve = fields.String(required=True, validate=validate.Length(min=1, max=256))
     _id = fields.String(required=False)
 
-    nomei = fields.String(required=False, validate=validate.Length(min=1, max=31))
-    extei = fields.String(required=False, validate=validate.Length(min=1, max=20))
+    nomei = fields.String(required=False)
+    extei = fields.String(required=False, validate=validate.Length(min=4, max=20, error="Teléfono/extensión de enlace informático inválido"))
 
     #BOOLEANO
     politicasaceptadas = fields.Boolean(required=True)
 
     noms = fields.String(required=False, validate=validate.Length(min=1, max=31))
-    exts = fields.String(required=False, validate=validate.Length(min=1, max=20))
+    exts = fields.String(required=False, validate=validate.Length(min=4, max=20, error="Teléfono/extensión de solicitante inválido"))
     puestos = fields.String(required=False, validate=validate.Length(min=1, max=256))
     areas = fields.String(required=False, validate=validate.Length(min=1, max=256))
     nombreJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
     puestoJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
     
-    desdet = fields.String(required=True, validate=validate.Length(min=1, max=256))
+    desdet = fields.String(required=True, validate=validate.Length(min=50, max=256, error="La descripción detallada debe tener mínimo 50 caracteres"))
     desotro = fields.String(required=False, validate=validate.Length(min=0, max=256))
     
     #AQUI NO REQUIERE QUE VALIDE LAS TRES, SOLO DEBE DE TENER ALGUNA 

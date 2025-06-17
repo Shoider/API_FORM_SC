@@ -19,7 +19,13 @@ class RegistroSchemaVPNMayo(Schema):
     nombreInterno=fields.String(required=False)
     puestoInterno= fields.String(required=False)
     #correoInterno=fields.String(required=False)
-    correoInterno=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
+    correoInterno=fields.String(required=False)
+    @validates('correoInterno')
+    def validate_correo_interno(self, value, **kwargs):
+        if value is None or value == "":
+            return  # Campo opcional, permite vacío
+        if not isinstance(value, str) or not value.lower().endswith("@conagua.gob.mx"):
+            raise ValidationError("Debe ser un correo institucional que termine en @conagua.gob.mx.")
     telefonoInterno=fields.String(required=False, validate=validate.Length(min=8, max=20, error="Teléfono de usuario inválido"))
     nombreExterno=fields.String(required=False)
     correoExterno=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
@@ -41,8 +47,8 @@ class RegistroSchemaVPNMayo(Schema):
     modelo=fields.String(required=True)
     serie=fields.String(required=True)
 
-    nombreAutoriza=fields.String(required=True)
-    puestoAutoriza=fields.String(required=True)
+    nombreAutoriza=fields.String(required=False)
+    puestoAutoriza=fields.String(required=False)
 
     movimiento =fields.String(required=False)
     justificacion=fields.String(required=True, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
