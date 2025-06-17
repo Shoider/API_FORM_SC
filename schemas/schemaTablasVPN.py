@@ -9,7 +9,7 @@ class TablasSchemaSitios(Schema):
     url=fields.String(required=False)
 
     @validates('url')
-    def validate_url_or_ip(self, value):
+    def validate_url_or_ip(self, value, **kwargs):
         if value is None or value == "":
             return  # Campo opcional, permite vacío
 
@@ -40,7 +40,7 @@ class TablasSchemasAcceso (Schema):
     direccion =fields.String(required=False)
 
     @validates('direccion')
-    def validate_url_or_ip(self, value):
+    def validate_url_or_ip(self, value, **kwargs):
         if value is None:
             # Si el campo es opcional y no se proporciona, no hay nada que validar
             return

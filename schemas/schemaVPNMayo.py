@@ -21,7 +21,7 @@ class RegistroSchemaVPNMayo(Schema):
     #correoInterno=fields.String(required=False)
     correoInterno=fields.String(required=False)
     @validates('correoInterno')
-    def validate_correo_interno(self, value):
+    def validate_correo_interno(self, value, **kwargs):
         if value is None or value == "":
             return  # Campo opcional, permite vacío
         if not isinstance(value, str) or not value.lower().endswith("@conagua.gob.mx"):
