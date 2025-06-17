@@ -43,7 +43,7 @@ class RegistroSchemaInter(Schema):
     ipUsuario = fields.String(required=True, validate=validar_ip_interna)
     correoUsuario=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
     direccion= fields.String(required=True)
-    teleUsuario= fields.String(required=True)
+    teleUsuario= fields.Number(required=True, error_messages={"invalid": "Teléfono de usuario inválido"})
     extUsuario= fields.String(required=True, validate=validate.Length(4, error="Número de extensión inválido"))
     nombreJefe= fields.String(required=True)
     puestoJefe= fields.String(required=True)
