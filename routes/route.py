@@ -435,15 +435,10 @@ class FileGeneratorRoute(Blueprint):
             datosRegistro, status_code = self.service.obtener_datos_por_id('vpnMayo', validated_data.get('id'))
 
             if status_code == 201:
-                noformato = datosRegistro.get('_id')
-                epoch = datosRegistro.get('epoch')
+                
+                self.logger.info(f"Registro encontrado con id: {datosRegistro.get('_id')}")
 
-
-                nombreEnlace = datosRegistro.get('nombreEnlace')
-                telefonoEnlace = datosRegistro.get('telefonoEnlace')
-                self.logger.info(f"Registro RFC agregado con ID: {noformato}")
-
-                return jsonify({"message": "Actualizando datos", "id": noformato, "datos": datosRegistro}), 200
+                return jsonify({"message": "Actualizando datos", "datos": datosRegistro}), 200
             else:
                 self.logger.error(f"No se encontro el registro a la base de datos, codigo: {status_code}")
                 # Enviar informacion al frontend
