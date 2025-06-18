@@ -4,6 +4,7 @@ from schemas.schemaVPNMayo import RegistroSchemaVPNMayo
 from schemas.schemaTel import RegistroSchemaTel
 from schemas.schemaRFC import RegistroSchemaRFC
 from schemas.schemaInter import RegistroSchemaInter
+from schemas.schemaFolio import BusquedaPorFolio
 from routes.route import FileGeneratorRoute  
 from services.service import Service
 from models.model import BDModel
@@ -23,6 +24,7 @@ form_schemaVPNMayo = RegistroSchemaVPNMayo()
 form_schemaTel = RegistroSchemaTel()
 form_schemaRFC = RegistroSchemaRFC()
 form_schemaInter = RegistroSchemaInter()
+form_schemaFolio = BusquedaPorFolio()
 
 # Model
 db_conn = BDModel()
@@ -32,7 +34,7 @@ db_conn.connect_to_database()
 service = Service(db_conn)
 
 # Routes
-routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, form_schemaRFC, form_schemaInter)
+routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, form_schemaRFC, form_schemaInter, form_schemaFolio)
 
 #Blueprint
 app.register_blueprint(routes)

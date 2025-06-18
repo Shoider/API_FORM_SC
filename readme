@@ -105,20 +105,14 @@ Si deseas realizar cambios en el código fuente y desarrollar localmente, sigue 
 ---
 
 
-# API_Auth
-Autentificador
+# API
+Pruebas
 
 Ejemplos
 
-Cuenta Nueva:
+"Busqueda por ID"
 
-curl -X POST http://localhost:8001/api3/generate -H "Content-Type: application/json" -d '{"emailInput": "brandon@gmail.com", "passwordInput": "1234"}'
-
-Inicion de Sesion:
-
-curl -X POST http://localhost:8001/api3/auth \
--H "Content-Type: application/json" \
--d '{"emailInput": "brandon@gmail.com", "passwordInput": "1234"}'
+curl -X POST http://localhost:50310/api2/v3/folio -H "Content-Type: application/json" -d '{"id": "2505150001"}'
 
 Variables de Entorno: (DEBUG)
 export MONGODB_USER=admin

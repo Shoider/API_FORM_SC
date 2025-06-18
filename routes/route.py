@@ -6,13 +6,14 @@ import time
 class FileGeneratorRoute(Blueprint):
     """Class to handle the routes for file generation"""
 
-    def __init__(self, service, forms_schemaVPNMayo, forms_schemaTel, forms_schemaRFC, form_schemaInter):
+    def __init__(self, service, forms_schemaVPNMayo, forms_schemaTel, forms_schemaRFC, form_schemaInter, form_schemaFolio):
         super().__init__("file_generator", __name__)
         self.logger = Logger()
         self.forms_schemaVPNMayo = forms_schemaVPNMayo
         self.forms_schemaTel = forms_schemaTel
         self.forms_schemaRFC = forms_schemaRFC
         self.form_schemaInter = form_schemaInter
+        self.form_schemaFolio = form_schemaFolio
         self.service = service
         self.register_routes()
 
@@ -23,6 +24,7 @@ class FileGeneratorRoute(Blueprint):
         self.route("/api2/v3/telefonia", methods=["POST"])(self.telefonia)
         self.route("/api2/v3/internet", methods=["POST"])(self.internet)
         self.route("/api2/v3/rfc", methods=["POST"])(self.rfc)
+        self.route("/api2/v3/folio", methods=["POST"])(self.busquedaFolio)
         self.route("/api2/healthcheck", methods=["GET"])(self.healthcheck)
 
     def fetch_request_data(self):
@@ -387,6 +389,65 @@ class FileGeneratorRoute(Blueprint):
                 self.logger.error(f"Error agregando el registro a la base de datos")
                 # Enviar informacion al frontend
                 return jsonify({"error": "Error agregando el registro a la base de datos"}), 500
+            
+        except ValidationError as err:
+            # Logica para manejar solo el primer error
+            first_field_with_error = next(iter(err.messages))
+            first_error_message = err.messages[first_field_with_error][0]
+
+            messages = err.messages
+            self.logger.warning("Ocurrieron errores de validación")
+            self.logger.info(f"Errores de validación completos: {messages}")
+            
+            # Otro error de validacion
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
+        except Exception as e:
+            self.logger.critical(f"Error validando la información: {e}")
+            return jsonify({"error": "Error validando la información"}), 500
+        finally:
+            self.logger.info("Función de validación finalizada")
+
+    # Busqueda
+    def busquedaFolio(self):
+        """
+        Esta ruta es para validar todos los datos ingresados y resppnder rapidamente en caso de error,
+        Es una busqueda por id de folio.
+
+        Args:
+            data: Un diccionario.
+
+        Returns:
+            Datos del registro con el id de folio proporcionado
+        """
+        try:
+            # Validacion de datos recibidos
+            data = request.get_json()
+
+            if not data:
+                return jsonify({"error": "No se enviaron datos"}), 400
+
+            # Validacion de los datos en schema
+            validated_data = self.form_schemaFolio.load(data)
+            self.logger.info("Ya se validaron correctamente") 
+
+            # Guardar en base de datos
+            # Llamar al servicio y retornar el id
+            datosRegistro, status_code = self.service.obtener_datos_por_id('vpnMayo', validated_data.get('id'))
+
+            if status_code == 201:
+                noformato = datosRegistro.get('_id')
+                epoch = datosRegistro.get('epoch')
+
+
+                nombreEnlace = datosRegistro.get('nombreEnlace')
+                telefonoEnlace = datosRegistro.get('telefonoEnlace')
+                self.logger.info(f"Registro RFC agregado con ID: {noformato}")
+
+                return jsonify({"message": "Actualizando datos", "id": noformato, "nombreEnlace": nombreEnlace, "telefonoEnlace": telefonoEnlace}), 200
+            else:
+                self.logger.error(f"No se encontro el registro a la base de datos, codigo: {status_code}")
+                # Enviar informacion al frontend
+                return jsonify({"error": "No se encontro el registro a la base de datos"}), 404
             
         except ValidationError as err:
             # Logica para manejar solo el primer error
