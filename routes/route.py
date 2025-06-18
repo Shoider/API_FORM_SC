@@ -443,7 +443,7 @@ class FileGeneratorRoute(Blueprint):
                 telefonoEnlace = datosRegistro.get('telefonoEnlace')
                 self.logger.info(f"Registro RFC agregado con ID: {noformato}")
 
-                return jsonify({"message": "Actualizando datos", "id": noformato, "nombreEnlace": nombreEnlace, "telefonoEnlace": telefonoEnlace}), 200
+                return jsonify({"message": "Actualizando datos", "id": noformato, "datos": datosRegistro}), 200
             else:
                 self.logger.error(f"No se encontro el registro a la base de datos, codigo: {status_code}")
                 # Enviar informacion al frontend
