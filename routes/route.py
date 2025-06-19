@@ -25,6 +25,7 @@ class FileGeneratorRoute(Blueprint):
         self.route("/api2/v3/telefonia", methods=["POST"])(self.telefonia)
         self.route("/api2/v3/internet", methods=["POST"])(self.internet)
         self.route("/api2/v3/rfc", methods=["POST"])(self.rfc)
+        self.route("/api2/v3/rfcActualizar", methods=["POST"])(self.rfcTicket)
         self.route("/api2/v3/folio", methods=["POST"])(self.busquedaFolio)
         self.route("/api2/healthcheck", methods=["GET"])(self.healthcheck)
 
