@@ -487,22 +487,26 @@ class FileGeneratorRoute(Blueprint):
                 return jsonify({"error": "No se enviaron datos"}), 400
 
             # Validacion de los datos en schema
-            validated_data = self.form_schemaFolio.load(data)
+            self.form_schemaFolio.load(data)
             self.logger.info("Ya se validaron correctamente") 
 
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
-            datosRegistro, status_code = self.service.obtener_datos_por_id('vpnMayo', validated_data.get('id'))
+            datosRegistro, status_code = self.service.obtener_datos_por_id('vpnMayo', data.get('id'))
 
             if status_code == 201:
                 
                 self.logger.info(f"Registro encontrado con id: {datosRegistro.get('_id')}")
 
-                return jsonify({"message": "Actualizando datos", "datos": datosRegistro}), 200
+                if (datosRegistro.get('subgerencia', '') == "Subgerencia de Sistemas"): 
+                    return jsonify({"message": "Actualizando datos", "datos": datosRegistro}), 200
+                else:
+                    return jsonify({"error": "Número de formato no es de Subgerencia de Sistemas", "message": "Número de formato no accesible"}), 405
+                    
             else:
                 self.logger.error(f"No se encontro el registro a la base de datos, codigo: {status_code}")
                 # Enviar informacion al frontend
-                return jsonify({"error": "No se encontro el registro a la base de datos"}), 404
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontro el número de formato"}), 402
             
         except ValidationError as err:
             # Logica para manejar solo el primer error
