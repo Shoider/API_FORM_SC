@@ -6,7 +6,7 @@ import time
 class FileGeneratorRoute(Blueprint):
     """Class to handle the routes for file generation"""
 
-    def __init__(self, service, forms_schemaVPNMayo, forms_schemaTel, forms_schemaRFC, form_schemaInter, form_schemaFolio):
+    def __init__(self, service, forms_schemaVPNMayo, forms_schemaTel, forms_schemaRFC, form_schemaInter, form_schemaFolio, form_schemaCampo):
         super().__init__("file_generator", __name__)
         self.logger = Logger()
         self.forms_schemaVPNMayo = forms_schemaVPNMayo
@@ -14,6 +14,7 @@ class FileGeneratorRoute(Blueprint):
         self.forms_schemaRFC = forms_schemaRFC
         self.form_schemaInter = form_schemaInter
         self.form_schemaFolio = form_schemaFolio
+        self.form_schemaCampo = form_schemaCampo
         self.service = service
         self.register_routes()
 
@@ -24,6 +25,7 @@ class FileGeneratorRoute(Blueprint):
         self.route("/api2/v3/telefonia", methods=["POST"])(self.telefonia)
         self.route("/api2/v3/internet", methods=["POST"])(self.internet)
         self.route("/api2/v3/rfc", methods=["POST"])(self.rfc)
+        self.route("/api2/v3/rfcActualizar", methods=["POST"])(self.rfcTicket)
         self.route("/api2/v3/folio", methods=["POST"])(self.busquedaFolio)
         self.route("/api2/healthcheck", methods=["GET"])(self.healthcheck)
 
@@ -188,6 +190,10 @@ class FileGeneratorRoute(Blueprint):
             # Preparacion de datos para validar
             datosProcesados = self.eliminar_campos_vacios(data)
             self.logger.info(f"Datos despues de limpieza: {datosProcesados}")
+
+            # Validacion de los datos en schema
+            self.form_schemaCampo.load(datosProcesados)
+            self.logger.info("Ya se validaron correctamente")
 
             noformato = datosProcesados.get('numeroFormato')
             memorando = str(datosProcesados.get('memorando'))
@@ -401,6 +407,60 @@ class FileGeneratorRoute(Blueprint):
             
             # Otro error de validacion
             return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
+        except Exception as e:
+            self.logger.critical(f"Error validando la información: {e}")
+            return jsonify({"error": "Error validando la información"}), 500
+        finally:
+            self.logger.info("Función de validación finalizada")
+
+        # Actualizar memorandos
+    def rfcTicket(self):
+        try: 
+            # Validacion de datos recibidos
+            data = request.get_json()
+            
+            if not data:
+                return jsonify({"error": "No se enviaron datos"}), 400
+            
+            # Preparacion de datos para validar
+            datosProcesados = self.eliminar_campos_vacios(data)
+            self.logger.info(f"Datos despues de limpieza: {datosProcesados}")
+
+            # Validacion de los datos en schema
+            self.form_schemaCampo.load(datosProcesados)
+            self.logger.info("Ya se validaron correctamente")
+
+            noformato = datosProcesados.get('numeroFormato')
+            ticket = str(datosProcesados.get('noticket'))
+
+            # Llamada al servicio de actualizacion de datos
+            status_code = self.service.actualizar_ticket_rfc(ticket, noformato)
+
+            # Epoch temporalmente aqui en lo que lo muevo a los servicios
+            now = time.time()
+            epoch = int(now)
+            
+            if status_code == 201:
+                self.logger.info(f"Registro VPN Mayo actualizado con ID: {noformato} y ticket: {ticket}")
+                # Enviar informacion al frontend
+                return jsonify({"message": "Datos validados correctamente", "id": noformato, "epoch": epoch}), 200
+            if status_code == 202:
+                self.logger.info("No se logro actualizar el ticket")
+                return jsonify({"error": "Datos incorrectos", "message": "No se logro actualizar el ticket"}), 401
+            if status_code == 203:
+                self.logger.error("No se encontro el Numero de Formato para editar")
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontro el número de formato para editar"}), 402
+            if status_code == 400:
+                self.logger.error("Ocurrio un error")
+                return jsonify({"error": "Error interno", "message": "Ocurrio un error interno"}), 400
+            else:
+                self.logger.critical(f"Error interno actualizando ticket")
+                # Enviar informacion al frontend
+                return jsonify({"error": "Error interno actualizando ticket"}), 500
+
+        except ValidationError as err:
+            self.logger.error(f"Error de validación: {err.messages}")
+            return jsonify({"error": "Datos inválidos", "message": err.messages}), 422
         except Exception as e:
             self.logger.critical(f"Error validando la información: {e}")
             return jsonify({"error": "Error validando la información"}), 500

@@ -64,7 +64,7 @@ class Service:
             document_type_name="RFC"
         )
     
-    # Aqui van actualizaciones de memorandos
+    # Aqui van actualizaciones de memorandos o tickets
 
     def actualizar_memorando_vpn(self, nuevo_memorando, documento_id):
         """
@@ -85,6 +85,39 @@ class Service:
                 resultado = vpn_collection.update_one(
                     {'_id': documento_id},
                     {'$set': {'memorando': nuevo_memorando}}
+                )
+
+                if resultado.modified_count > 0:
+                    return 201
+                else:
+                    # Si no se modificó nada (aunque se encontró el documento),
+                    # podría ser un caso a considerar en tu lógica de manejo de errores.
+                    return 202
+            else:
+                return 203 # No se encontró el documento con el ID proporcionado
+        except Exception as e:
+            print(f"Ocurrió un error: {e}")
+            return 400
+        
+    def actualizar_ticket_rfc(self, nuevo_ticket, documento_id):
+        """
+        Busca un documento en MongoDB por su ID, actualiza el campo 'noticket'
+        y retorna el documento original antes de la actualización.
+
+        Args:
+            documento_id (str): El ID del documento a actualizar.
+            nuevo_memorando (str): El nuevo valor para el campo 'memorando'.
+        """
+        try:
+            rfc_collection = self.db_conn.db['rfc']
+            # Buscar el documento por su ID
+            documento_original = rfc_collection.find_one({'_id': documento_id})
+
+            if documento_original:
+                # Actualizar el campo 'memorando'
+                resultado = rfc_collection.update_one(
+                    {'_id': documento_id},
+                    {'$set': {'noticket': nuevo_ticket}}
                 )
 
                 if resultado.modified_count > 0:
