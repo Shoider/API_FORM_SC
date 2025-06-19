@@ -117,7 +117,7 @@ class Service:
                 # Actualizar el campo 'memorando'
                 resultado = rfc_collection.update_one(
                     {'_id': documento_id},
-                    {'$set': {'memorando': nuevo_ticket}}
+                    {'$set': {'noticket': nuevo_ticket}}
                 )
 
                 if resultado.modified_count > 0:
