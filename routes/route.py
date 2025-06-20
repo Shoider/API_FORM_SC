@@ -213,8 +213,8 @@ class FileGeneratorRoute(Blueprint):
                 self.logger.info("No se logro actualizar el memorando")
                 return jsonify({"error": "Datos incorrectos", "message": "No se logro actualizar el memorando"}), 401
             if status_code == 203:
-                self.logger.error("No se encontro el Numero de Formato para editar")
-                return jsonify({"error": "Datos incorrectos", "message": "No se encontro el número de formato para editar"}), 402
+                self.logger.error("No se encontró el Numero de Formato para editar")
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontró el número de formato para editar"}), 402
             if status_code == 400:
                 self.logger.error("Ocurrio un error")
                 return jsonify({"error": "Error interno", "message": "Ocurrio un error interno"}), 400
@@ -448,8 +448,8 @@ class FileGeneratorRoute(Blueprint):
                 self.logger.info("No se logro actualizar el ticket")
                 return jsonify({"error": "Datos incorrectos", "message": "No se logro actualizar el ticket"}), 401
             if status_code == 203:
-                self.logger.error("No se encontro el Numero de Formato para editar")
-                return jsonify({"error": "Datos incorrectos", "message": "No se encontro el número de formato para editar"}), 402
+                self.logger.error("No se encontró el Numero de Formato para editar")
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontró el número de formato para editar"}), 402
             if status_code == 400:
                 self.logger.error("Ocurrio un error")
                 return jsonify({"error": "Error interno", "message": "Ocurrio un error interno"}), 400
@@ -504,9 +504,9 @@ class FileGeneratorRoute(Blueprint):
                     return jsonify({"error": "Número de formato no es de Subgerencia de Sistemas", "message": "Número de formato no accesible"}), 405
                     
             else:
-                self.logger.error(f"No se encontro el registro a la base de datos, codigo: {status_code}")
+                self.logger.error(f"No se encontró el registro a la base de datos, codigo: {status_code}")
                 # Enviar informacion al frontend
-                return jsonify({"error": "Datos incorrectos", "message": "No se encontro el número de formato"}), 402
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontró el número de formato"}), 402
             
         except ValidationError as err:
             # Logica para manejar solo el primer error
@@ -549,15 +549,15 @@ class FileGeneratorRoute(Blueprint):
             Datos, status_code = self.service.actualizar_funcionrol_rfc(nFormato, funcionrol, nRegistro, movimiento)
 
             if status_code == 201:
-                self.logger.info("Informacion actualizada con exito en la base de datos")
+                self.logger.info("Información actualizada con exito en la base de datos")
                 # Enviar archivo
                 return self.rfc(Datos)
             if status_code == 202:
                 self.logger.info("No se logro actualizar el FRO")
                 return jsonify(Datos), status_code
             if status_code == 203:
-                self.logger.error("No se encontro formato con  el ID especifico")
-                return jsonify({"error": "No se encontro el ID de registro"}), status_code
+                self.logger.error("No se encontró formato con  el ID especifico")
+                return jsonify({"error": "No se encontró el ID de registro"}), status_code
             if status_code == 400:
                 self.logger.error("Ocurrio un error")
                 return jsonify({"error": "Error nuevo"}), status_code
