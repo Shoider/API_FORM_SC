@@ -274,7 +274,11 @@ class Service:
             # --- La consulta: Usar find_one para obtener un solo documento ---
             # find_one() es más eficiente que find() si solo esperas un resultado.
             #document = collection.find_one({"_id": object_id_to_find})
-            
+            if datos is None:
+            # No se encontró el documento
+                return None, 404
+        
+            # Documento encontrado
             # Regresamos el diccionario de datos 
             return datos, 201
 
