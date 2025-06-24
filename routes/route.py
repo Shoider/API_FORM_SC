@@ -129,10 +129,6 @@ class FileGeneratorRoute(Blueprint):
                 return jsonify({"error": "Error agregando el registro a la base de datos"}), 500
             
         except ValidationError as err:
-            # Logica para manejar solo el primer error
-            first_field_with_error = next(iter(err.messages))
-            first_error_message = err.messages[first_field_with_error][0]
-
             messages = err.messages
             self.logger.warning("Ocurrieron errores de validación")
             self.logger.info(f"Errores de validación completos: {messages}")
@@ -168,6 +164,10 @@ class FileGeneratorRoute(Blueprint):
                         if isinstance(errores_del_item, dict) and 'direccion' in errores_del_item:
                             self.logger.error(f"Error de validación: 'direccion'")
                             return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP'"}), 422
+                        
+            # Logica para manejar solo el primer error
+            first_field_with_error = next(iter(err.messages))
+            first_error_message = err.messages[first_field_with_error][0]
             
             # Otro error de validacion
             return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422

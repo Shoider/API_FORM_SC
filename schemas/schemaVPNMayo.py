@@ -11,6 +11,9 @@ class RegistroSchemaVPNMayo(Schema):
     numeroFormato=fields.String(required=False)
     _id=fields.String(required=False)
 
+    fecha=fields.String(required=False)
+    epoch=fields.Integer(required=False)
+
     unidadAdministrativa = fields.String(required=True)
     areaAdscripcion = fields.String(required=True)
     subgerencia = fields.String(required=True)
