@@ -498,10 +498,10 @@ class FileGeneratorRoute(Blueprint):
                 
                 self.logger.info(f"Registro encontrado con id: {datosRegistro.get('_id')}")
 
-                if (datosRegistro.get('subgerencia', '') == "Subgerencia de Sistemas"): 
-                    return jsonify({"message": "Actualizando datos", "datos": datosRegistro}), 200
-                else:
-                    return jsonify({"error": "Número de formato no es de Subgerencia de Sistemas", "message": "Número de formato no accesible"}), 405
+                # if (datosRegistro.get('subgerencia', '') == "Subgerencia de Sistemas"): 
+                return jsonify({"message": "Datos encontrados", "datos": datosRegistro}), 200
+                # else:
+                #     return jsonify({"error": "Número de formato no es de Subgerencia de Sistemas", "message": "Número de formato no accesible"}), 405
                     
             else:
                 self.logger.error(f"No se encontró el registro a la base de datos, codigo: {status_code}")
