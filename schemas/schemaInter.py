@@ -39,18 +39,24 @@ class RegistroSchemaInter(Schema):
 
     class Meta:
         ordered = True
+
+    memo=fields.String(required=True)
+    noticket=fields.String(required=True)
         
     uaUsuario= fields.String(required=True)
     areaUsuario= fields.String(required=True)
     nombreUsuario= fields.String(required=True)
     puestoUsuario= fields.String(required=True)
-    ipUsuario = fields.String(required=True, validate=validar_ip_interna)
     correoUsuario=fields.Email(required=False, error_messages={"invalid": "Correo electrónico inválido"})
     direccion= fields.String(required=True)
     teleUsuario= fields.String(required=True, validate=validar_telefono_usuario)
     extUsuario= fields.String(required=True, validate=validate.Length(4, error="Número de extensión inválido"))
     nombreJefe= fields.String(required=True)
     puestoJefe= fields.String(required=True)
+
+    cambio = fields.String(required=True)
+    ipUsuario = fields.String(required=True, validate=validar_ip_interna)
+    ipAnterior = fields.String(required=False, validate=validar_ip_interna)
 
     almacenamiento= fields.Boolean(required=True)
     blogs= fields.Boolean(required=True)
