@@ -40,8 +40,8 @@ class RegistroSchemaInter(Schema):
     class Meta:
         ordered = True
 
-    memo=fields.String(required=True)
-    noticket=fields.String(required=True)
+    memo=fields.String(required=False)
+    noticket=fields.String(required=False)
         
     uaUsuario= fields.String(required=True)
     areaUsuario= fields.String(required=True)
