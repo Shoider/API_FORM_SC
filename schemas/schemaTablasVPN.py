@@ -65,8 +65,10 @@ class TablasSchemaPersonal(Schema):
     EQUIPO = fields.String(required=False)
     SERVICIOS = fields.String(required=False)
     isNew=fields.Boolean(required=False)
+
 class TablasSchemaWebCE (Schema):
     id = fields.Integer(required=False)
+    IDU = fields.String(required=False)
     NOMBRE = fields.String(required=False)
     SIGLAS = fields.String(required=False)
     URL = fields.String(required=False)
