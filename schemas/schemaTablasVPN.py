@@ -53,6 +53,24 @@ class TablasSchemasAcceso (Schema):
             pass  # No es una IP, continuar con otras validaciones
         # Si ninguna de las anteriores coincide, lanza un error
         raise ValidationError("Debe ser una IP que inicie con '172..")
-     
     sistemaOperativo =fields.String(required=False)
     isNew=fields.Boolean(required=False)
+    
+    
+class TablasSchemaPersonal(Schema):
+    id= fields.Integer(required=False)
+    NOMBRE = fields.String(required=False)
+    CORREO = fields.String(required=False)
+    EMPRESA = fields.String(required=False)
+    EQUIPO = fields.String(required=False)
+    SERVICIOS = fields.String(required=False)
+    isNew=fields.Boolean(required=False)
+class TablasSchemaWebCE (Schema):
+    id = fields.Integer(required=False)
+    NOMBRE = fields.String(required=False)
+    SIGLAS = fields.String(required=False)
+    URL = fields.String(required=False)
+    PUERTOS =fields.String(required=False)
+    isNew=fields.Boolean(required=False)
+     
+    
