@@ -66,6 +66,7 @@ class RegistroSchemaVPNMayo(Schema):
     cuentaUsuario = fields.Boolean(required=False)
     accesoWeb = fields.Boolean(required=False)
     accesoRemoto = fields.Boolean(required=False)
+    casoespecial =fields.String(required=False)
 
     politicasaceptadas = fields.Boolean(required=True)
 
