@@ -73,7 +73,7 @@ class TablasSchemaPersonal(Schema):
     
     EMPRESA = fields.String(required=False)
     EQUIPO = fields.String(required=False)
-    SERVICIOS = fields.String(required=False)
+    SERVICIOS = fields.Integer(required=False)
     isNew=fields.Boolean(required=False)
 
 class TablasSchemaWebCE (Schema):
