@@ -164,6 +164,7 @@ class FileGeneratorRoute(Blueprint):
                         if isinstance(errores_del_item, dict) and 'direccion' in errores_del_item:
                             self.logger.error(f"Error de validación: 'direccion'")
                             return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP'"}), 422
+                        
             # REGISTROS Personal
             if 'registrosPersonal' in messages:
                 remoto = messages['registrosPersonal']
@@ -182,8 +183,16 @@ class FileGeneratorRoute(Blueprint):
                         if isinstance(errores_del_item, dict) and 'URL' in errores_del_item:
                             self.logger.error(f"Error de validación: 'URL'")
                             return jsonify({"error": "Datos invalidos", "message": " Verifica el formato de 'URL/IP' de la tabla o asegurate que sea uno por renglón"}), 422
-                                    
-                        
+            
+            # VALICACION SERVICIOS                        
+            for key, value in messages.items():
+                if key.startswith('registrosPersonal[') and isinstance(value, str): # Error individual por ID de usuario
+                    self.logger.error(f"Error de validación de servicios por usuario: '{key}'")
+                    return jsonify({"error": "Datos inválidos", "message": f"Verifica la cantidad de servicios registrados para el usuario con IDU {key.split('[')[1][:-1]}"}), 422
+                elif key == 'general_servicios' and isinstance(value, str): # Error de suma total
+                    self.logger.error(f"Error de validación de suma total de servicios: '{key}'")
+                    return jsonify({"error": "Datos inválidos", "message": "El número total de servicios solicitados no coincide con los servicios registrados."}), 422
+                
             # Logica para manejar solo el primer error
             first_field_with_error = next(iter(err.messages))
             first_error_message = err.messages[first_field_with_error][0]
