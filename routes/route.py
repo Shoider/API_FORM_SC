@@ -191,7 +191,7 @@ class FileGeneratorRoute(Blueprint):
                     return jsonify({"error": "Datos inválidos", "message": f"Verifica la cantidad de servicios registrados para el usuario con IDU {key.split('[')[1][:-1]}"}), 422
                 elif key == 'general_servicios' and isinstance(value, str): # Error de suma total
                     self.logger.error(f"Error de validación de suma total de servicios: '{key}'")
-                    return jsonify({"error": "Datos inválidos", "message": "El número total de servicios solicitados no coincide con los servicios registrados."}), 422
+                    return jsonify({"error": "Datos inválidos", "message": "El número total de servicios solicitados no coincide con los servicios registrados"}), 422
                 
             # Logica para manejar solo el primer error
             first_field_with_error = next(iter(err.messages))
