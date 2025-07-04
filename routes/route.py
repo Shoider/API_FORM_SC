@@ -163,7 +163,7 @@ class FileGeneratorRoute(Blueprint):
                         # direccion
                         if isinstance(errores_del_item, dict) and 'direccion' in errores_del_item:
                             self.logger.error(f"Error de validación: 'direccion'")
-                            return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP'"}), 422
+                            return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP"}), 422
                         
             # Logica para manejar solo el primer error
             first_field_with_error = next(iter(err.messages))
