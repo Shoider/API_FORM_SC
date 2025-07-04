@@ -163,7 +163,26 @@ class FileGeneratorRoute(Blueprint):
                         # direccion
                         if isinstance(errores_del_item, dict) and 'direccion' in errores_del_item:
                             self.logger.error(f"Error de validación: 'direccion'")
-                            return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP"}), 422
+                            return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Dirección IP'"}), 422
+            # REGISTROS Personal
+            if 'registrosPersonal' in messages:
+                remoto = messages['registrosPersonal']
+                if isinstance(remoto, dict):
+                    for indice_item_str, errores_del_item in remoto.items():
+                        # CORREO
+                        if isinstance(errores_del_item, dict) and 'CORREO' in errores_del_item:
+                            self.logger.error(f"Error de validación: 'CORREO'")
+                            return jsonify({"error": "Datos invalidos", "message": " Verifica 'Correo Electrónico' de la tabla"}), 422
+            # REGISTROS WebCE
+            if 'registrosWebCE' in messages:
+                remoto = messages['registrosWebCE']
+                if isinstance(remoto, dict):
+                    for indice_item_str, errores_del_item in remoto.items():
+                        # URL
+                        if isinstance(errores_del_item, dict) and 'URL' in errores_del_item:
+                            self.logger.error(f"Error de validación: 'URL'")
+                            return jsonify({"error": "Datos invalidos", "message": " Verifica el formato de 'URL/IP' de la tabla o asegurate que sea uno por renglón"}), 422
+                                    
                         
             # Logica para manejar solo el primer error
             first_field_with_error = next(iter(err.messages))
