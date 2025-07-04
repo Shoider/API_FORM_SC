@@ -66,6 +66,7 @@ class RegistroSchemaVPNMayo(Schema):
     cuentaUsuario = fields.Boolean(required=False)
     accesoWeb = fields.Boolean(required=False)
     accesoRemoto = fields.Boolean(required=False)
+    casoespecial =fields.String(required=False)
 
     politicasaceptadas = fields.Boolean(required=True)
 
@@ -77,3 +78,42 @@ class RegistroSchemaVPNMayo(Schema):
     registrosPersonal = fields.List(fields.Nested(TablasSchemaPersonal))
 
     registrosWebCE = fields.List(fields.Nested(TablasSchemaWebCE))
+
+    @validates_schema
+    def validate_servicios_coherencia(self, data, **kwargs):
+        errores = {}
+
+        # 1. Validación individual para cada usuario
+        for persona_data in data.get('registrosPersonal', []):
+            try:
+                persona_id = persona_data['id']
+                servicios_solicitados = int(persona_data['SERVICIOS'])
+            except (KeyError, ValueError):
+                # Esto ya debería ser manejado por TablasSchemaPersonal si los campos fueran requeridos.
+                # Aquí lo manejamos como un caso donde no se puede verificar la coherencia.
+                continue 
+            
+            servicios_registrados_para_persona = [
+                web_ce_data for web_ce_data in data.get('registrosWebCE', [])
+                if web_ce_data.get('IDU') == persona_id
+            ]
+            
+            if len(servicios_registrados_para_persona) != servicios_solicitados:
+                errores[f'registrosPersonal[{persona_id}]'] = f"El usuario con ID {persona_id} solicitó {servicios_solicitados} servicios, pero se registraron {len(servicios_registrados_para_persona)} servicios en 'registrosWebCE'."
+
+        # 2. Validación de la suma total (opcional, si también quieres esta validación global)
+        total_servicios_solicitados = 0
+        for persona_data in data.get('registrosPersonal', []):
+            try:
+                total_servicios_solicitados += int(persona_data.get('SERVICIOS', 0))
+            except ValueError:
+                # Si 'SERVICIOS' no es un número, ya debería ser manejado por la validación del campo.
+                pass
+
+        total_servicios_registrados = len(data.get('registrosWebCE', []))
+
+        if total_servicios_solicitados != total_servicios_registrados:
+            errores['general_servicios'] = f"El total de servicios solicitados ({total_servicios_solicitados}) no coincide con el total de servicios registrados en 'registrosWebCE' ({total_servicios_registrados})."
+        
+        if errores:
+            raise ValidationError(errores)
