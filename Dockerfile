@@ -1,10 +1,13 @@
-FROM python:3.13.4-alpine3.22
+FROM python:latest
 
 WORKDIR /app
 
-RUN addgroup -g 1000 app && adduser -D -u 1000 -G app app
+# Crear grupo y usuario 'app'
+RUN groupadd -g 1000 app && \
+    useradd -m -u 1000 -g app app
 
-COPY --chown=app . .
+# Copiar archivos y cambiar propietario
+COPY . .
 
 RUN mkdir -p /app/logs && \
     chown -R app:app /app/logs && \
@@ -14,13 +17,14 @@ RUN mkdir -p /app/data && \
     chown -R app:app /app/data && \
     chmod -R 777 /app/data
 
-RUN apk update && \
-    apk add --no-cache tzdata curl && \
-    rm -rf /var/cache/apk/*
-    
+# Instalar dependencias del sistema
+RUN apt-get update && \
+    apt-get install -y tzdata curl && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir --upgrade pip && pip install -r requirements.txt
 
-EXPOSE 8000 
+EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl --fail http://formulario_api_sc:8000/api2/healthcheck || exit 1
 
