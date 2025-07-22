@@ -10,10 +10,6 @@ RUN mkdir -p /app/logs && \
     chown -R app:app /app/logs && \
     chmod -R 775 /app/logs
 
-RUN mkdir -p /app/data && \
-    chown -R app:app /app/data && \
-    chmod -R 777 /app/data
-
 RUN apk update && \
     apk add --no-cache tzdata curl && \
     rm -rf /var/cache/apk/*
