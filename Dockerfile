@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir --upgrade pip && pip install -r requirements.txt
 
 EXPOSE 8000 
 
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl --fail http://formulario_api_sc:8000/api2/healthcheck || exit 1
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl --fail http://localhost:8000/api2/healthcheck || exit 1
 
 USER app
 
