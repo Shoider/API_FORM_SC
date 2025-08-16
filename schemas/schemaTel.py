@@ -22,15 +22,15 @@ class RegistroSchemaTel(Schema):
     puestoUsuario= fields.String(required=True, validate=validate.Length(min=1, max=256))
     nombreJefe= fields.String(required=True, validate=validate.Length(min=1, max=256))
     puestoJefe= fields.String(required=True, validate=validate.Length(min=1, max=256))
-    marca= fields.String(required=True)
-    modelo= fields.String(required=True, validate=validate.Length(min=1, max=16))
-    serie= fields.String(required=True, validate=validate.Length(min=1, max=16))
+    marca= fields.String(required=False)
+    modelo= fields.String(required=False, validate=validate.Length(min=1, max=16))
+    serie= fields.String(required=False, validate=validate.Length(min=1, max=16))
     #version= fields.String(required=True, validate=validate.Length(min=1, max=16))
     movimiento= fields.String(required=True, validate=validate.OneOf(["ALTA", "BAJA", "CAMBIO"]))
 
-    mundo= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
-    nacional= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
-    celular= fields.String(required=True, validate=validate.OneOf(["SI", "NO"]))
+    mundo= fields.String(required=False, validate=validate.OneOf(["SI", "NO"]))
+    nacional= fields.String(required=False, validate=validate.OneOf(["SI", "NO"]))
+    celular= fields.String(required=False, validate=validate.OneOf(["SI", "NO"]))
 
     tipoUsuario= fields.String(required=True)
 
