@@ -34,7 +34,6 @@ class RegistroSchemaTel(Schema):
 
     tipoUsuario= fields.String(required=True)
 
-    usuaExterno= fields.Boolean(required=False)
     fecha= fields.String(required=False)
 
     politicasaceptadas = fields.Boolean(required=True)
