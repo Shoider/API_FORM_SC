@@ -93,7 +93,7 @@ class RegistroSchemaRFC(Schema):
     registrosUsuaCambiosAltas = fields.List(fields.Nested(TablasSchemaAdmin))
     registrosUsuaCambiosBajas = fields.List(fields.Nested(TablasSchemaAdmin))
     # Otro
-    registrosOtroAltas = fields.List(fields.Nested(TablasSchemaInter))
-    registrosOtroBajas = fields.List(fields.Nested(TablasSchemaInter))
-    registrosOtroCambiosAltas = fields.List(fields.Nested(TablasSchemaInter))
-    registrosOtroCambiosBajas = fields.List(fields.Nested(TablasSchemaInter))
+    registrosOtroAltas = fields.List(fields.Nested(TablasSchemaAdmin))
+    registrosOtroBajas = fields.List(fields.Nested(TablasSchemaAdmin))
+    registrosOtroCambiosAltas = fields.List(fields.Nested(TablasSchemaAdmin))
+    registrosOtroCambiosBajas = fields.List(fields.Nested(TablasSchemaAdmin))
