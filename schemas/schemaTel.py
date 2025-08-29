@@ -37,3 +37,5 @@ class RegistroSchemaTel(Schema):
     fecha= fields.String(required=False)
 
     politicasaceptadas = fields.Boolean(required=True)
+
+    extinterno=fields.String(required=False, validate=validate.Length(min=1, max=20))
