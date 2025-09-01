@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, validates, validates_schema, ValidationError
 
 class RegistroSchemaTel(Schema):
     
@@ -13,8 +13,16 @@ class RegistroSchemaTel(Schema):
 
     nombreEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=256))
     idEmpleado= fields.String(required=False, validate=validate.Length(5, error="Número de empleado inválido"))
-    extEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=20))
-    correoEmpleado= fields.Email(required=False, error_messages={"invalid": "Correo electrónico de empleado inválido"})
+    extEmpleado= fields.String(required=False, validate=validate.Length(min=4, max=20, error="Número/extensión de empleado inválido"))
+    #correoEmpleado= fields.Email(required=False, error_messages={"invalid": "Correo electrónico de empleado inválido"})
+    correoEmpleado=fields.String(required=False)
+    @validates('correoEmpleado')
+    def validate_correo_empleado(self, value, **kwargs):
+        if value is None or value == "":
+            return  # Campo opcional, permite vacío
+        if not isinstance(value, str) or not value.lower().endswith("@conagua.gob.mx"):
+            raise ValidationError("Debe ser un correo institucional que termine en @conagua.gob.mx.")
+
     puestoEmpleado= fields.String(required=False, validate=validate.Length(min=1, max=256))
 
     nombreEnlace= fields.String(required=True, validate=validate.Length(min=1, max=256))
