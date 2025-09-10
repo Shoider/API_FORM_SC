@@ -20,15 +20,15 @@ class RegistroSchemaRFC(Schema):
     #BOOLEANO
     politicasaceptadas = fields.Boolean(required=True)
 
-    noms = fields.String(required=False, validate=validate.Length(min=1, max=31))
+    noms = fields.String(required=False)
     exts = fields.String(required=False, validate=validate.Length(min=4, max=20, error="Teléfono/extensión de solicitante inválido"))
-    puestos = fields.String(required=False, validate=validate.Length(min=1, max=256))
-    areas = fields.String(required=False, validate=validate.Length(min=1, max=256))
-    nombreJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
-    puestoJefe = fields.String(required=True, validate=validate.Length(min=1, max=256))
+    puestos = fields.String(required=False)
+    areas = fields.String(required=False)
+    nombreJefe = fields.String(required=True)
+    puestoJefe = fields.String(required=True)
     
-    desdet = fields.String(required=True, validate=validate.Length(min=50, max=256, error="La descripción detallada ingresada es muy breve."))
-    desotro = fields.String(required=False, validate=validate.Length(min=0, max=256))
+    desdet = fields.String(required=True, validate=validate.Length(min=40, max=256, error="La descripción detallada ingresada es muy breve."))
+    desotro = fields.String(required=False)
     
     #AQUI NO REQUIERE QUE VALIDE LAS TRES, SOLO DEBE DE TENER ALGUNA 
     justifica = fields.String(required=False)
