@@ -59,7 +59,7 @@ class RegistroSchemaVPNMayo(Schema):
     puestoAutoriza=fields.String(required=False)
 
     movimiento =fields.String(required=False)
-    justificacion=fields.String(required=True, validate=validate.Length(min=50, max=256, error="La justificación debe tener mínimo 50 caracteres."))
+    justificacion=fields.String(required=True, validate=validate.Length(min=50, error="La justificación debe tener mínimo 50 caracteres."))
 
     # Booleanos
     solicitante = fields.String(required=False)
