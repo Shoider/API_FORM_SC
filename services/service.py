@@ -63,7 +63,15 @@ class Service:
             counter_collection_name="rfcCounters",
             document_type_name="RFC"
         )
-    
+    def add_DNS(self, new_dns):
+         
+        # Llamamos a nuestra función genérica con los parámetros específicos para Telefonia.
+        return self._add_document_with_custom_id(
+            document_data=new_dns,
+            data_collection_name="dns",
+            counter_collection_name="dnsCounters",
+            document_type_name="DNS"
+        )
     # Aqui van actualizaciones de memorandos o tickets
 
     def actualizar_memorando_vpn(self, nuevo_memorando, documento_id):
