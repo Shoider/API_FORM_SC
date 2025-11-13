@@ -71,7 +71,8 @@ class Service:
             data_collection_name="dns",
             counter_collection_name="dnsCounters",
             document_type_name="DNS"
-        )
+        )    
+
     # Aqui van actualizaciones de memorandos o tickets
 
     def actualizar_memorando_vpn(self, nuevo_memorando, documento_id):
