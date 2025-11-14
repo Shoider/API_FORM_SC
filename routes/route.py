@@ -15,7 +15,7 @@ class FileGeneratorRoute(Blueprint):
         self.form_schemaInter = form_schemaInter
         self.form_schemaFolio = form_schemaFolio
         self.form_schemaCampo = form_schemaCampo
-        self.form_schemaDNS = form_schemaDNS
+        self.forms_schemaDNS = form_schemaDNS
         self.service = service
         self.register_routes()
 
@@ -458,7 +458,7 @@ class FileGeneratorRoute(Blueprint):
         try:
 
             # Validacion de datos recibidos
-            data = request.get_json()
+            data = request.get_json()         
 
             if not data:
                 return jsonify({"error": "No se enviaron datos"}), 400
@@ -473,11 +473,11 @@ class FileGeneratorRoute(Blueprint):
 
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
-            tel_registro, status_code = self.service.add_Tel(datosProcesados)
+            dns_registro, status_code = self.service.add_DNS(datosProcesados)
 
             if status_code == 201:
-                noformato = tel_registro.get('_id')
-                epoch = tel_registro.get('epoch')
+                noformato = dns_registro.get('_id')
+                epoch = dns_registro.get('epoch')
                 self.logger.info(f"Registro DNS agregado con ID: {noformato}")
 
                 # Enviar informacion al frontend

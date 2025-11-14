@@ -65,7 +65,7 @@ class Service:
         )
     def add_DNS(self, new_dns):
          
-        # Llamamos a nuestra función genérica con los parámetros específicos para Telefonia.
+        # Llamamos a nuestra función genérica con los parámetros específicos para DNS.
         return self._add_document_with_custom_id(
             document_data=new_dns,
             data_collection_name="dns",
