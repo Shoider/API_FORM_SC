@@ -1,7 +1,9 @@
 from marshmallow import Schema, fields, validate, validates, validates_schema, ValidationError
 
 class RegistroSchemaDNS(Schema):
-    _id=fields.String(required=False)
+    class Meta:
+        ordered = True
+   
     movimiento= fields.String(required=False, validate=validate.OneOf(["ALTA", "BAJA", "CAMBIO"]))
     
     nombreResponsable= fields.String(required=False)
@@ -9,7 +11,7 @@ class RegistroSchemaDNS(Schema):
     
     nombreUsuario= fields.String(required=False)
     areaUsuario= fields.String(required=False)
-    puestoUsuario= fields.String(required=False)
+    puestousuario= fields.String(required=False)
     direccionUsuario= fields.String(required=False)    
     ala= fields.String(required=False)
     piso= fields.String(required=False)

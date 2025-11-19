@@ -38,7 +38,7 @@ db_conn.connect_to_database()
 service = Service(db_conn)
 
 # Routes
-routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, form_schemaRFC, form_schemaInter, form_schemaFolio, form_schemaCampo,form_schemaDNS)
+routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, form_schemaRFC, form_schemaInter, form_schemaDNS,form_schemaFolio, form_schemaCampo)
 
 #Blueprint
 app.register_blueprint(routes)
