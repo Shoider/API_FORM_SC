@@ -71,7 +71,16 @@ class Service:
             data_collection_name="dns",
             counter_collection_name="dnsCounters",
             document_type_name="DNS"
-        )    
+        )   
+    def add_ABCRED(self, new_abcred):
+         
+        # Llamamos a nuestra función genérica con los parámetros específicos para DNS.
+        return self._add_document_with_custom_id(
+            document_data=new_abcred,
+            data_collection_name="abcred",
+            counter_collection_name="abcredCounters",
+            document_type_name="ABCRED"
+        )  
 
     # Aqui van actualizaciones de memorandos o tickets
 
