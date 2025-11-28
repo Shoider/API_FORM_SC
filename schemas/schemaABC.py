@@ -30,6 +30,7 @@ class RegistroSchemaABC(Schema):
     direccionInterno=fields.String(required=False)
 
     inicioActividades=fields.String(required=False)
+    finActividades=fields.String(required=False)
     nombreCuenta=fields.String(required=False)
 
     justificacion=fields.String(required=False)
@@ -39,5 +40,20 @@ class RegistroSchemaABC(Schema):
     estadoResponsable=fields.String(required=False)
     cpResponsable=fields.String(required=False)
     direccionResponsable=fields.String(required=False)
+
+    nombreExterno=fields.String(required=False)
+    apellidoExterno=fields.String(required=False)
+    puestoExterno=fields.String(required=False)
+    unidadExterno=fields.String(required=False)
+    areaExterno=fields.String(required=False)
+    CURPExterno=fields.String(required=False)
+    RFCExterno=fields.String(required=False)
+    extensionExterno=fields.String(required=False)
+    ciudadExterno=fields.String(required=False)
+    estadoExterno=fields.String(required=False)
+    cpExterno=fields.String(required=False)
+    direccionExterno=fields.String(required=False)
+
+
     
     
