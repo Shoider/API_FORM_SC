@@ -5,7 +5,7 @@ class RegistroSchemaABC(Schema):
         ordered = True  
     
     solicitud= fields.String(required=False)
-    reporteMesa = fields.String(required=False)
+    reporteMesa = fields.String(required=False, validate=validate.Length(6, error="Número de reporte de mesa inválido"))
     
     nombreRequisitante= fields.String(required=False)
     extensionRequisitante= fields.String(required=False)
@@ -21,8 +21,8 @@ class RegistroSchemaABC(Schema):
     puestoInterno=fields.String(required=False)
     unidadInterno=fields.String(required=False)
     areaInterno=fields.String(required=False)
-    CURPInterno=fields.String(required=False)
-    RFCInterno=fields.String(required=False)
+    CURPInterno=fields.String(required=False, validate=validate.Length(min=18, error="La CURP debe contener 18 caracteres"))
+    RFCInterno=fields.String(required=False, validate=validate.Length(min=10, error="El RFC debe de contener mínimo 10 caracteres."))
     extensionInterno=fields.String(required=False)
     ciudadInterno=fields.String(required=False)
     estadoInterno=fields.String(required=False)
@@ -46,13 +46,15 @@ class RegistroSchemaABC(Schema):
     puestoExterno=fields.String(required=False)
     unidadExterno=fields.String(required=False)
     areaExterno=fields.String(required=False)
-    CURPExterno=fields.String(required=False)
-    RFCExterno=fields.String(required=False)
+    CURPExterno=fields.String(required=False, validate=validate.Length(min=18, error="La CURP debe contener 18 caracteres."))
+    RFCExterno=fields.String(required=False, validate=validate.Length(min=10, error="El RFC debe contener mínimo 10 caracteres."))
     extensionExterno=fields.String(required=False)
     ciudadExterno=fields.String(required=False)
     estadoExterno=fields.String(required=False)
     cpExterno=fields.String(required=False)
     direccionExterno=fields.String(required=False)
+    
+    fecha= fields.String(required=False)
 
 
     
