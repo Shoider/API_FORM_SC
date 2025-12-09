@@ -4,8 +4,10 @@ class RegistroSchemaDNS(Schema):
     class Meta:
         ordered = True
    
+    _id=fields.String(required=False)
+    epoch=fields.Integer(required=False)
     movimiento= fields.String(required=True, validate=validate.OneOf(["ALTA", "BAJA", "CAMBIO"]))
-    
+  
     nombreResponsable= fields.String(required=True)
     puestoResponsable = fields.String(required=True)
     

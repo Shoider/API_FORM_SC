@@ -8,6 +8,7 @@ from schemas.schemaDNS import RegistroSchemaDNS
 from schemas.schemaABC import RegistroSchemaABC
 from schemas.schemaFolio import BusquedaPorFolio
 from schemas.schemaActualizarCampo import ActualizacionCampo
+from schemas.schemaActualizaDNS import SchemaFormatoDNS
 from routes.route import FileGeneratorRoute  
 from services.service import Service
 from models.model import BDModel
@@ -30,6 +31,7 @@ form_schemaInter = RegistroSchemaInter()
 form_schemaDNS=RegistroSchemaDNS()
 form_schemaABC=RegistroSchemaABC()
 form_schemaFolio = BusquedaPorFolio()
+form_schemaFormatoDNS= SchemaFormatoDNS()
 form_schemaCampo = ActualizacionCampo()
 
 # Model
@@ -40,7 +42,7 @@ db_conn.connect_to_database()
 service = Service(db_conn)
 
 # Routes
-routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, form_schemaRFC, form_schemaInter, form_schemaDNS,form_schemaABC,form_schemaFolio, form_schemaCampo)
+routes = FileGeneratorRoute(service, form_schemaVPNMayo, form_schemaTel, form_schemaRFC, form_schemaInter, form_schemaDNS,form_schemaABC,form_schemaFolio,form_schemaFormatoDNS, form_schemaCampo)
 
 #Blueprint
 app.register_blueprint(routes)
