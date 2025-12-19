@@ -10,8 +10,8 @@ class Service:
 
     def __init__(self, db_conn):
         self.logger = Logger()
-        self.db_conn = db_conn
-        
+        self.db_conn = db_conn    
+
     def add_VPNMayo(self, new_vpn):
         """
         Función para añadir un registro de VPN Mayo a la base de datos.
@@ -268,7 +268,30 @@ class Service:
             error_message = f"Error adding {document_type_name} register to database with custom ID: {e}"
             self.logger.error(error_message)
             return jsonify({"error": error_message}), 500
+
+    def Direcciones_Catalogo(self):
+        """Te da un resumen del catalogo de direcciones"""
+        """
         
+        """
+        try:
+            catalogo_collection = self.db_conn.db['catalogo_dir']
+            projection = {
+                "_id": 1,                
+                "Ciudad": 1,
+                "Estado": 1,
+                "CP": 1,
+                "Dirección":1
+            }
+            catalogo_dir = list(catalogo_collection.find({}, projection))
+            # Convertir ObjectId a string para serialización JSON
+            for doc in catalogo_dir:
+                doc['_id'] = str(doc['_id'])
+            return catalogo_dir, 200
+        except Exception as e:
+            self.logger.error(f"Error al obtener datos de la colección 'catalogo_dir': {e}")
+            return {"error": "Error al obtener datos del Catálogo"}, 500  
+
     def obtener_datos_por_id(self, collection_name: str, document_id: str) -> dict:
         """
         Busca y devuelve un único documento de una colección por su _id.

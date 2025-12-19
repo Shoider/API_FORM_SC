@@ -33,6 +33,7 @@ class FileGeneratorRoute(Blueprint):
         self.route("/api2/v3/rfcActualizar", methods=["POST"])(self.rfcTicket)
         self.route("/api2/v3/folio", methods=["POST"])(self.busquedaFolio)
         self.route("/api2/v3/modificardns", methods=["POST"])(self.modificaDNS)
+        self.route("/api2/v3/catalogodir", methods=["POST"])(self.catalogoGet)
         self.route("/api2/healthcheck", methods=["GET"])(self.healthcheck)
 
     def fetch_request_data(self):
@@ -781,7 +782,18 @@ class FileGeneratorRoute(Blueprint):
         except Exception as e:
             self.logger.error(f"Error generando PDF: {e}")
             return jsonify({"error": "Error generando PDF"}), 500
-
+    def catalogoGet(self):
+        """Endpoint para obtener los datos de Dirección"""
+        try:
+            catalogo_data, status_code = self.service.Direcciones_Catalogo()
+            self.logger.debug("Datos obtenidos de Catálogo: ")
+            self.logger.debug(catalogo_data)
+            return jsonify(catalogo_data), status_code
+        except Exception as e:
+            self.logger.error(f"Error en get_abc_registrations: {e}")
+            return jsonify({"error": "Internal server error"}), 500
+    
+        
     def healthcheck(self):
         """Function to check the health of the services API inside the docker container"""
         return jsonify({"status": "Up"}), 200
