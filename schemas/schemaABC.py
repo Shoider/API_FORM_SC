@@ -34,6 +34,7 @@ class RegistroSchemaABC(Schema):
     nombreCuenta=fields.String(required=False)
 
     justificacion=fields.String(required=False)
+    datosAdicionales=fields.String(required=False)
     nombreResponsable=fields.String(required=False)
     puestoResponsable=fields.String(required=False)
     ciudadResponsable=fields.String(required=False)
