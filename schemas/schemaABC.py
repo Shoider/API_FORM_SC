@@ -54,6 +54,9 @@ class RegistroSchemaABC(Schema):
     estadoExterno=fields.String(required=False)
     cpExterno=fields.String(required=False)
     direccionExterno=fields.String(required=False)
+
+    piso= fields.String(required=False)
+    ala= fields.String(required=False)
     
     fecha= fields.String(required=False)
 
