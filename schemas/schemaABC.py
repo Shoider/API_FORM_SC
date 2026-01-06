@@ -4,6 +4,8 @@ class RegistroSchemaABC(Schema):
     class Meta:
         ordered = True  
     
+    _id=fields.String(required=False)
+    epoch=fields.Integer(required=False)
     solicitud= fields.String(required=False)
     reporteMesa = fields.String(required=False, validate=validate.Length(6, error="Número de reporte de mesa inválido"))
     

@@ -33,6 +33,7 @@ class FileGeneratorRoute(Blueprint):
         self.route("/api2/v3/rfcActualizar", methods=["POST"])(self.rfcTicket)
         self.route("/api2/v3/folio", methods=["POST"])(self.busquedaFolio)
         self.route("/api2/v3/modificardns", methods=["POST"])(self.modificaDNS)
+        self.route("/api2/v3/modificarabc", methods=["POST"])(self.modificaABC)
         self.route("/api2/v3/catalogodir", methods=["POST"])(self.catalogoGet)
         self.route("/api2/healthcheck", methods=["GET"])(self.healthcheck)
 
@@ -704,6 +705,61 @@ class FileGeneratorRoute(Blueprint):
             # Guardar en base de datos
             # Llamar al servicio y retornar el id
             datosRegistro, status_code = self.service.obtener_datos_por_id('dns', data.get('id'))
+
+            if status_code == 201:
+                
+                self.logger.info(f"Registro encontrado con id: {datosRegistro.get('_id')}")
+
+                # if (datosRegistro.get('subgerencia', '') == "Subgerencia de Sistemas"): 
+                return jsonify({"message": "Datos encontrados", "datos": datosRegistro}), 200
+                # else:
+                #     return jsonify({"error": "Número de formato no es de Subgerencia de Sistemas", "message": "Número de formato no accesible"}), 405
+                    
+            else:
+                self.logger.error(f"No se encontró el registro a la base de datos, codigo: {status_code}")
+                # Enviar informacion al frontend
+                return jsonify({"error": "Datos incorrectos", "message": "No se encontró el número de formato"}), 402
+            
+        except ValidationError as err:
+            # Logica para manejar solo el primer error
+            first_field_with_error = next(iter(err.messages))
+            first_error_message = err.messages[first_field_with_error][0]
+
+            messages = err.messages
+            self.logger.warning("Ocurrieron errores de validación")
+            self.logger.info(f"Errores de validación completos: {messages}")
+            
+            # Otro error de validacion
+            return jsonify({"error": "Datos invalidos", "message": first_error_message, "campo": first_field_with_error}), 422
+        except Exception as e:
+            self.logger.critical(f"Error validando la información: {e}")
+            return jsonify({"error": "Error validando la información"}), 500
+        finally:
+            self.logger.info("Función de validación finalizada")
+    
+    ##Actualzar formato de abc_red
+    def modificaABC(self):
+        """
+        Args:
+            data: Un diccionario.
+
+        Returns:
+            Datos del registro con el id de folio proporcionado
+        """
+        try:
+            # Validacion de datos recibidos
+            data = request.get_json()
+
+            if not data:
+                return jsonify({"error": "No se enviaron datos"}), 400
+
+            # Validacion de los datos en schema
+            self.form_schemaFormatoDNS.load(data)
+            self.logger.info("Ya se validaron correctamente") 
+
+            # Guardar en base de datos
+            # Llamar al servicio y retornar el id
+            datosRegistro, status_code = self.service.obtener_datos_por_id('abcred', data.get('id'))
 
             if status_code == 201:
                 
