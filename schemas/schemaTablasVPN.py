@@ -36,7 +36,7 @@ class TablasSchemaSitios(Schema):
 class TablasSchemasAcceso (Schema):
     id =fields.Integer(required=False)
     movimiento =fields.String(required=False)
-    nomenclatura =fields.String(required=False, validate=validate.Length(min=8))
+    nomenclatura =fields.String(required=False, validate=validate.Length(min=3))
 
     nombreSistema =fields.String(required=False, validate=validate.Length(min=11))
         
@@ -52,6 +52,8 @@ class TablasSchemasAcceso (Schema):
             ip = ipaddress.ip_address(value)
             if str(ip).startswith("172."):
                 return  # Es una IP válida
+            if str(ip).startswith("192."):
+                return
         except ValueError:
             pass  # No es una IP, continuar con otras validaciones
         # Si ninguna de las anteriores coincide, lanza un error
@@ -101,6 +103,8 @@ class TablasSchemaWebCE (Schema):
         try:
             ip = ipaddress.ip_address(value)
             if str(ip).startswith("172."):
+                return
+            if str(ip).startswith("192."):
                 return
         except ValueError:
             pass  # No es una IP, continuar
