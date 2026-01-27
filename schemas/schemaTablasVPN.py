@@ -23,6 +23,8 @@ class TablasSchemaSitios(Schema):
             ip = ipaddress.ip_address(value)
             if str(ip).startswith("172."):
                 return
+            if str(ip).startswith("192."):
+                return
         except ValueError:
             pass  # No es una IP, continuar
 
