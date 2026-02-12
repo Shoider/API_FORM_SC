@@ -163,7 +163,7 @@ class FileGeneratorRoute(Blueprint):
                         # nomeclatura
                         if isinstance(errores_del_item, dict) and 'nomenclatura' in errores_del_item:
                             self.logger.error(f"Error de validación: 'nomenclatura'")
-                            return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Nomenclatura'. Min: 8 Caracteres"}), 422
+                            return jsonify({"error": "Datos invalidos", "message": "c) Verifica 'Nomenclatura'. Min: 3 Caracteres"}), 422
                         # nombreSistema
                         if isinstance(errores_del_item, dict) and 'nombreSistema' in errores_del_item:
                             self.logger.error(f"Error de validación: 'nombreSistema'")
