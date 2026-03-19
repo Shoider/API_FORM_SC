@@ -6,9 +6,8 @@ Este proyecto representa la API de la aplicación CONAGUA, diseñada para propor
 
 1.  [Descripción](#descripcion)
 2.  [Requisitos](#requisitos)
-3.  [Instalación](#instalacion)
-4.  [Uso](#uso)
-5.  [Desarrollo](#desarrollo)
+3.  [Uso](#uso)
+4.  [Desarrollo](#desarrollo)
 
 ---
 
@@ -21,48 +20,6 @@ Esta API proporciona los servicios backend necesarios para la aplicación CONAGU
 * Python 3.x instalado.
 * `pip` (gestor de paquetes de Python).
 
-## Instalación
-
-1.  **Clonar el Repositorio (Opcional)**
-
-    Si aún no tienes el código localmente, clona el repositorio desde GitHub:
-
-    ```bash
-    git clone https://github.com/Shoider/API_FORM_VAL
-    cd API_FORM_VAL
-    ```
-
-2.  **Crear un Entorno Virtual (Recomendado)**
-
-    Es recomendable crear un entorno virtual para aislar las dependencias del proyecto.
-
-    ```bash
-    py -m venv venv
-    ```
-
-3.  **Activar el Entorno Virtual**
-
-    Activa el entorno virtual creado:
-
-    * **Windows:**
-
-        ```bash
-        venv\Scripts\activate
-        ```
-
-    * **macOS y Linux:**
-
-        ```bash
-        source venv/bin/activate
-        ```
-
-4.  **Instalar Dependencias**
-
-    Instala las dependencias del proyecto desde el archivo `requirements.txt`:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
 
 ## Uso
 
